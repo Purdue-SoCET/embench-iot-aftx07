@@ -25,7 +25,7 @@ import subprocess
 
 from embench_core import log
 
-cpu_mhz = 50
+cpu_mhz = 1
 meminit_elf = ['riscv64-unknown-elf-objcopy', '-O', 'binary']
 bd_src = "/home/asicfab/a/socet21/embench-iot/bd/src/"
 cp = ['cp', 'meminit.bin', '/home/asicfab/a/socet21/AFTx06/meminit.bin']
