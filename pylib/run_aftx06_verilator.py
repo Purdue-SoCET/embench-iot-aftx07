@@ -58,7 +58,7 @@ def build_benchmark_cmd(bench, args):
 	subprocess.run(cp, cwd=bd_src_cpy)
 
 	print(f"Running {bench}")
-	return ['make', 'no_gui', '-C', '/home/asicfab/a/socet50/AFTx06']
+	return ['/home/asicfab/a/socet50/AFTx06/obj_dir/VbASIC_wrapper', 'meminit.bin']
 
 def decode_results(stdout_str, stderr_str):
 	matchval = re.findall(r"^[0-9]+", stdout_str, re.MULTILINE)

@@ -57,6 +57,26 @@ citoa(uint64_t val, char *val_str)
 	return val_str;
 }
 
+int numPlaces (int n) {
+    int r = 1;
+    if (n < 0) n = (n == -2147483648) ? 2147483647: -n;
+    while (n > 9) {
+        n /= 10;
+        r++;
+    }
+    return r;
+}
+
+int reversDigits(int num)
+{
+    int rev_num = 0;
+    while (num > 0) {
+        rev_num = rev_num * 10 + num % 10;
+        num = num / 10;
+    }
+    return rev_num;
+}
+
 static inline void
 cprintf(char * str) {
 	size_t loop_idx;
@@ -67,16 +87,63 @@ cprintf(char * str) {
 	*magic = '\n';
 }
 
+static inline void
+cprintfd(char * str) {
+	size_t loop_idx;
+	volatile char *magic = 0x20000;
+	for (loop_idx = 0; str[loop_idx] != '\0'; loop_idx++) {
+		*magic = str[loop_idx];
+	}
+}
+
+static inline void
+cprintfi(int num) {
+	char numC;
+	volatile char *magic = 0x20000;
+	uint64_t rev = reversDigits(num);
+	int np = numPlaces(num);
+	for(int i = 0; i < np; i++) {
+		cprintfd(citoa(rev % 10, numC));
+		rev /= 10;
+	}
+	*magic = '\n';
+}
+
+void __attribute__((interrupt)) __attribute__((aligned(4))) 
+handler()
+{
+	uint32_t mepc_value;
+	uint32_t mcause_value;
+	asm volatile("csrr %0, mepc" : "=r"(mepc_value));
+	asm volatile("csrr %0, mcause" : "=r"(mcause_value));
+	cprintfi(mepc_value);
+	cprintfi(mcause_value);
+	for(;;);
+}
+
 void
 initialise_board(void)
 {
 	__asm__ volatile("li a0,0" : : : "memory");
+	//uint32_t mtvec_value = (uint32_t)handler;
+	//uint32_t mstatus_value = 0x8;
+	//asm volatile("csrw mstatus, %0" : : "r" (mstatus_value));
+	//asm volatile("csrw mtvec, %0" : : "r" (mtvec_value));
 	cprintf("Initializing board!\n");
+}
+
+void
+print_verify_benchmark(int res)
+{
+	cprintf("Benchmark Return: ");
+	cprintfi(res);
 }
 
 void __attribute__ ((noinline)) __attribute__ ((externally_visible))
 start_trigger(void)
 {
+	char num1;
+	volatile char *magic = 0x20000;
 	cprintf("Start trigger!\n");
 	start_cycles = get_csr(CYCLE);
 	start_instrs = get_csr(INSTR);
@@ -92,8 +159,10 @@ stop_trigger(void)
 	elps_instrs = get_csr(INSTR) - start_instrs;
 	cprintf("Elapsed Cylces:\n");
 	cprintf(citoa(elps_cycles, num1));
+	// cprintfi(elps_cycles);
 	cprintf("Elapsed Instructions:\n");
 	cprintf(citoa(elps_instrs, num2));
+	//cprintfi(elps_instrs);
 	for(;;);
 }
 

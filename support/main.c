@@ -28,6 +28,7 @@ main (int argc __attribute__ ((unused)),
 
   start_trigger ();
   result = benchmark ();
+  // print_verify_benchmark(result);
   stop_trigger ();
 
   /* bmarks that use arrays will check a global array rather than int result */
