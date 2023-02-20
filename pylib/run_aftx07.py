@@ -26,7 +26,7 @@ import os
 
 from embench_core import log
 
-root = os.path.join(os.path.dirname(__file__), "..")
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 aftx07_root = os.getenv('AFTX07_ROOT')
 cpu_mhz = 1
