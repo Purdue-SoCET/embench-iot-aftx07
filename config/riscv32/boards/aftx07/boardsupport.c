@@ -34,7 +34,7 @@ void initialise_board(void) {
     uint32_t mstatus_value = 0x8;
     asm volatile("csrw mstatus, %0" : : "r"(mstatus_value));
     asm volatile("csrw mtvec, %0" : : "r"(mtvec_value));
-    print("Initializing board!n");
+    print("Initializing board!\n");
 }
 
 void print_verify_benchmark(int res) {
