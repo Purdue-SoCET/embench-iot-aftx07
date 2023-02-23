@@ -65,7 +65,6 @@ def build_benchmark_cmd(bench, args):
 def decode_results(stdout_str, stderr_str):
     elapsed_cycles = int(re.findall(r"^Total cycles: ([0-9]+)", stdout_str, re.MULTILINE)[0])
     elapsed_instrs = int(re.findall(r"^Total Instructions: ([0-9]+)", stdout_str, re.MULTILINE)[0])
-    print(stdout_str)
 
     global cpu_mhz
     print(f'Speed: {elapsed_cycles / cpu_mhz / 1000}')

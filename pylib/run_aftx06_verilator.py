@@ -64,7 +64,6 @@ def build_benchmark_cmd(bench, args):
     return [aftx06_root + '/obj_dir/VbASIC_wrapper', 'meminit.bin']
 
 def decode_results(stdout_str, stderr_str):
-    print(stdout_str)
     matchval = re.findall(r"^[0-9]+", stdout_str, re.MULTILINE)
     elapsed_cycles = matchval[0]
     elapsed_instrs = matchval[1]
