@@ -31,7 +31,7 @@ root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 aftx07_root = os.getenv('AFTX07_ROOT')
 cpu_mhz = 1
 meminit_elf = ['riscv64-unknown-elf-objcopy', '-O', 'binary']
-bd_src = os.path.join(root, "bd/src/")
+bd_src = os.path.join(root, "bd_aftx07/src/")
 cp = ['cp', 'meminit.bin', aftx07_root + '/meminit.bin']
 
 def get_target_args(remnant):
@@ -63,14 +63,15 @@ def build_benchmark_cmd(bench, args):
     return [aftx07_root + '/aft_out/sim-verilator/Vaftx07']
 
 def decode_results(stdout_str, stderr_str):
-    matchval = re.findall(r"[0-9]+", stdout_str, re.MULTILINE)
-    elapsed_cycles = int(matchval[1])
-    elapsed_instrs = int(matchval[2])
+    elapsed_cycles = int(re.findall(r"^Total cycles: ([0-9]+)", stdout_str, re.MULTILINE)[0])
+    elapsed_instrs = int(re.findall(r"^Total Instructions: ([0-9]+)", stdout_str, re.MULTILINE)[0])
+    print(stdout_str)
 
     global cpu_mhz
     print(f'Speed: {elapsed_cycles / cpu_mhz / 1000}')
     print(f'Instructions: {elapsed_instrs}')
+    print(f'Clocks: {elapsed_cycles}')
+    print(f'IPC: {elapsed_instrs / elapsed_cycles}')
     print('Returning result.')
 
     return elapsed_cycles / cpu_mhz / 1000
-

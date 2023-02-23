@@ -14,5 +14,6 @@ __pycache__/
 .pylintrc
 
 # Default build and log directories
-bd/
+bd*/
+out*
 logs/
