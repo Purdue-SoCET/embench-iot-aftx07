@@ -13,8 +13,8 @@
 
    Original code from: https://github.com/tz1/qrduino */
 
-#include "support.h"
 #include "qrencode.h"
+#include "support.h"
 
 #include <string.h>
 
@@ -30,66 +30,49 @@ static char heap[HEAP_SIZE];
 static const char *encode;
 static int size;
 
-static int benchmark_body (int  rpt);
+static int benchmark_body(int rpt);
 
-void
-warm_caches (int  heat)
-{
-  int  res = benchmark_body (heat);
+void warm_caches(int heat) {
+    int res = benchmark_body(heat);
 
-  return;
+    return;
 }
 
-
-int
-benchmark (void)
-{
-  return benchmark_body (LOCAL_SCALE_FACTOR * CPU_MHZ);
+int benchmark(void) {
+    return benchmark_body(LOCAL_SCALE_FACTOR * CPU_MHZ);
 }
 
+static int __attribute__((noinline)) benchmark_body(int rpt) {
+    static const char *in_encode = "http://www.mageec.com";
+    int i;
 
-static int __attribute__ ((noinline))
-benchmark_body (int rpt)
-{
-  static const char *in_encode = "http://www.mageec.com";
-  int i;
+    for (i = 0; i < rpt; i++) {
+        encode = in_encode;
+        size = 22;
+        init_heap_beebs((void *)heap, HEAP_SIZE);
 
-  for (i = 0; i < rpt; i++)
-    {
-      encode = in_encode;
-      size = 22;
-      init_heap_beebs ((void *) heap, HEAP_SIZE);
+        initeccsize(1, size);
 
-      initeccsize (1, size);
+        memcpy(strinbuf, encode, size);
 
-      memcpy (strinbuf, encode, size);
-
-      initframe ();
-      qrencode ();
-      freeframe ();
-      freeecc ();
+        initframe();
+        qrencode();
+        freeframe();
+        freeecc();
     }
 
-  return 0;
+    return 0;
 }
 
-void
-initialise_benchmark ()
-{
+void initialise_benchmark() {}
+
+int verify_benchmark(int unused) {
+    unsigned char expected[22] = {254, 101, 63, 128, 130, 110, 160, 128, 186, 65,  46,
+                                  128, 186, 38, 46,  128, 186, 9,   174, 128, 130, 20};
+
+    return (0 == memcmp(strinbuf, expected, 22 * sizeof(strinbuf[0]))) &&
+           check_heap_beebs((void *)heap);
 }
-
-int
-verify_benchmark (int unused)
-{
-  unsigned char expected[22] = {
-    254, 101, 63, 128, 130, 110, 160, 128, 186, 65, 46,
-    128, 186, 38, 46, 128, 186, 9, 174, 128, 130, 20
-  };
-
-  return (0 == memcmp (strinbuf, expected, 22 * sizeof (strinbuf[0])))
-    && check_heap_beebs ((void *) heap);
-}
-
 
 /*
    Local Variables:

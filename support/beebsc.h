@@ -32,11 +32,15 @@
    The full complexity of assert is not needed for a benchmark. See the
    discussion at:
 
-   https://lists.librecores.org/pipermail/embench/2019-August/000007.html 
+   https://lists.librecores.org/pipermail/embench/2019-August/000007.html
 
    This function just*/
 
-#define assert_beebs(expr) { if (!(expr)) exit (1); }
+#define assert_beebs(expr)                                                                         \
+    {                                                                                              \
+        if (!(expr))                                                                               \
+            exit(1);                                                                               \
+    }
 
 #define float_eq_beebs(exp, actual) (fabsf(exp - actual) < VERIFY_FLOAT_EPS)
 #define float_neq_beebs(exp, actual) !float_eq_beebs(exp, actual)
@@ -45,17 +49,16 @@
 
 /* Local simplified versions of library functions */
 
-int rand_beebs (void);
-void srand_beebs (unsigned int new_seed);
+int rand_beebs(void);
+void srand_beebs(unsigned int new_seed);
 
-void init_heap_beebs (void *heap, const size_t heap_size);
-int check_heap_beebs (void *heap);
-void *malloc_beebs (size_t size);
-void *calloc_beebs (size_t nmemb, size_t size);
-void *realloc_beebs (void *ptr, size_t size);
-void free_beebs (void *ptr);
+void init_heap_beebs(void *heap, const size_t heap_size);
+int check_heap_beebs(void *heap);
+void *malloc_beebs(size_t size);
+void *calloc_beebs(size_t nmemb, size_t size);
+void *realloc_beebs(void *ptr, size_t size);
+void free_beebs(void *ptr);
 #endif /* BEEBSC_H */
-
 
 /*
    Local Variables:

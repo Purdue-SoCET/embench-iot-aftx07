@@ -19,10 +19,7 @@
 
 /* Standard C does not permit empty translation units, so provide one. */
 
-static void
-empty_func ()
-{
-}
+static void empty_func() {}
 
 /*
    Local Variables:

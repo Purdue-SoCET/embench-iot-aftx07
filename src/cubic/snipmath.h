@@ -31,23 +31,20 @@
  **  Callable library functions begin here
  */
 
-void SolveCubic (double a, double b, double c,	/* Cubic.C        */
-		 double d, int *solutions, double *x);
-
+void SolveCubic(double a, double b, double c, /* Cubic.C        */
+                double d, int *solutions, double *x);
 
 /*
  **  File: ISQRT.C
  */
 
-struct int_sqrt
-{
-  unsigned sqrt, frac;
+struct int_sqrt {
+    unsigned sqrt, frac;
 };
 
 #endif /* SNIPMATH__H */
 
 /* vim: set ts=3 sw=3 et: */
-
 
 /*
    Local Variables:

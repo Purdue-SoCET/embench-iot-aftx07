@@ -30,7 +30,6 @@ typedef unsigned short WORD;
 
 /* vim: set ts=3 sw=3 et: */
 
-
 /*
    Local Variables:
    mode: C

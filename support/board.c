@@ -13,7 +13,6 @@
 
 #include "boardsupport.c"
 
-
 /*
    Local Variables:
    mode: C

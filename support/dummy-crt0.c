@@ -15,25 +15,18 @@
    Some target linker scripts (e.g. RISC-V, ARM) use _start as the entry point -
    others (e.g. ARC) use __start.  */
 
-extern int main (int argc, char *argv[]);
+extern int main(int argc, char *argv[]);
 
-
-void
-_start (void)
-{
-  (void) main (0, 0);
+void _start(void) {
+    (void)main(0, 0);
 }
 
-void
-__start (void)
-{
-  (void) main (0, 0);
+void __start(void) {
+    (void)main(0, 0);
 }
 
-void
-__init (void)
-{
-  (void) main (0, 0);
+void __init(void) {
+    (void)main(0, 0);
 }
 
 /*

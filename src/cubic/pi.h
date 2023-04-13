@@ -21,13 +21,12 @@
 #include <math.h>
 
 #ifndef PI
-#define PI         (4*atan(1))
+#define PI (4 * atan(1))
 #endif
 
 #endif /* PI__H */
 
 /* vim: set ts=3 sw=3 et: */
-
 
 /*
    Local Variables:

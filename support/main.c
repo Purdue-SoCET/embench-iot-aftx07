@@ -13,32 +13,45 @@
 
 #include "support.h"
 
+int __attribute__((used))
+main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
+    int i;
+    volatile int result;
+    int correct;
 
-int __attribute__ ((used))
-main (int argc __attribute__ ((unused)),
-      char *argv[] __attribute__ ((unused)))
-{
-  int i;
-  volatile int result;
-  int correct;
+    print("init board\n");
+    initialise_board();
+    print("after init board\n");
+    print("init bench\n");
+    initialise_benchmark();
+    print("after init bench\n");
+    print("warmup heat\n");
+    warm_caches(WARMUP_HEAT);
+    print("after heat\n");
 
-  initialise_board ();
-  initialise_benchmark ();
-  warm_caches (WARMUP_HEAT);
+    print("pre start trigger\n");
+    start_trigger();
+    print("after start trigger\n");
+    print("pre benchmark\n");
+    result = benchmark();
+    print("after benchmark\n");
+    // print_verify_benchmark(result);
+    print("pre stop trigger\n");
+    stop_trigger();
+    print("after stop trigger\n");
 
-  start_trigger ();
-  result = benchmark ();
-  // print_verify_benchmark(result);
-  stop_trigger ();
+    /* bmarks that use arrays will check a global array rather than int result */
 
-  /* bmarks that use arrays will check a global array rather than int result */
+    correct = verify_benchmark(result);
+    if (!correct) {
+        print("BENCHMARK FAILED\n");
+    } else {
+        print("BENCHMARK PASSED\n");
+    }
 
-  correct = verify_benchmark (result);
+    return (!correct);
 
-  return (!correct);
-
-}				/* main () */
-
+} /* main () */
 
 /*
    Local Variables:

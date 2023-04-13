@@ -13,79 +13,48 @@
    dependent C library code. It only makes sense if it is used with
    -gc-sections. */
 
-double
-acos (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double acos(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-atan (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double atan(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-cos (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double cos(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-sin (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double sin(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-pow (double x __attribute__ ((unused)), double y __attribute__ ((unused)))
-{
-  return 0.0;
+double pow(double x __attribute__((unused)), double y __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-sqrt (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double sqrt(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-float
-sqrtf (float x __attribute__ ((unused)))
-{
-  return 0.0;
+float sqrtf(float x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-floor (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double floor(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-float
-floorf (float x __attribute__ ((unused)))
-{
-  return 0.0;
+float floorf(float x __attribute__((unused))) {
+    return 0.0;
 }
 
-
-double
-exp (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double exp(double x __attribute__((unused))) {
+    return 0.0;
 }
 
-double
-log (double x __attribute__ ((unused)))
-{
-  return 0.0;
+double log(double x __attribute__((unused))) {
+    return 0.0;
 }
 
 /*
