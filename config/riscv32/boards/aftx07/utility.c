@@ -1,8 +1,8 @@
-#include "format.h"
 #include "utility.h"
+#include "format.h"
 
 void __attribute__((noinline)) print_string(const char *s) {
-    volatile char *MAGIC_ADDR = (volatile char *)0x1000;
+    volatile char *MAGIC_ADDR = (volatile char *)0xB0000000;
     for (int i = 0; s[i]; i++) {
         *MAGIC_ADDR = s[i];
     }
