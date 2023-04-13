@@ -63,6 +63,9 @@ def build_benchmark_cmd(bench, args):
     return [aftx07_root + '/aft_out/sim-verilator/Vaftx07']
 
 def decode_results(stdout_str, stderr_str):
+    print("================stdout================")
+    print(stdout_str);
+    print("======================================")
     elapsed_cycles = int(re.findall(r"^Total cycles: ([0-9]+)", stdout_str, re.MULTILINE)[0])
     elapsed_instrs = int(re.findall(r"^Total Instructions: ([0-9]+)", stdout_str, re.MULTILINE)[0])
 
