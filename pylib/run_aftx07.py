@@ -31,7 +31,7 @@ root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 aftx07_root = os.getenv('AFTX07_ROOT')
 cpu_mhz = 1
 meminit_elf = ['riscv64-unknown-elf-objcopy', '-O', 'binary']
-bd_src = os.path.join(root, "bd_aftx07/src/")
+# bd_src = os.path.join(root, "bd_aftx07/src/")
 cp = ['cp', 'meminit.bin', aftx07_root + '/meminit.bin']
 
 def get_target_args(remnant):
@@ -44,6 +44,12 @@ def get_target_args(remnant):
         default=1,
         help='Processor clock speed in MHz'
     )
+    parser.add_argument(
+        '--build-dir',
+        type=str,
+        default='bd_aftx07',
+        help='Path to build directory'
+    )
 
     return parser.parse_args(remnant)
 
@@ -51,11 +57,12 @@ def build_benchmark_cmd(bench, args):
     """Construct the command to run the benchmark. "args" is a 
        namespace with target specific arguments"""
 
+    bd_src = os.path.join(root, args.build_dir, 'src')
     meminit_elf_cpy = copy.deepcopy(meminit_elf)
     meminit_elf_cpy.append(bench)
     meminit_elf_cpy.append("meminit.bin")
     bd_src_cpy = copy.deepcopy(bd_src)
-    bd_src_cpy = bd_src_cpy + bench
+    bd_src_cpy = os.path.join(bd_src_cpy, bench)
     subprocess.run(meminit_elf_cpy, cwd=bd_src_cpy)
     subprocess.run(['cp', bench, aftx07_root + '/meminit.bin'], cwd=bd_src_cpy)
 

@@ -20,6 +20,6 @@ Make sure that you build AFTx07 with at least 64K of memory.
 ```
 
 ```sh
-build_all.py --arch=riscv32 --chip=aftx07 --board=aftx07 --clean
-benchmark_speed.py --target-module run_aftx07 --timeout=3600 --sim-parallel
+build_all.py --arch=riscv32 --chip=aftx07 --board=aftx07 --builddir bd_aftx07 --clean
+benchmark_speed.py --target-module run_aftx07 --timeout=3600 --builddir bd_aftx07
 ```
