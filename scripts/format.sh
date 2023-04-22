@@ -1,13 +1,13 @@
 #!/bin/sh
 
-echo "Instructions for $1"
-echo "["
-grep "^Instructions: " $1 | awk '{printf "    %s\n", $2}'
-echo "]"
-
 echo "Clocks for $1"
 echo "["
 grep "^Clocks: " $1 | awk '{printf "    %s\n", $2}'
+echo "]"
+
+echo "Instructions for $1"
+echo "["
+grep "^Instructions: " $1 | awk '{printf "    %s\n", $2}'
 echo "]"
 
 echo "Speed for $1"
