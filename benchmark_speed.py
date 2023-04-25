@@ -42,6 +42,8 @@ from embench_core import log_benchmarks
 from embench_core import embench_stats
 from embench_core import output_format
 
+import io
+from contextlib import redirect_stdout
 
 def get_common_args():
     """Build a parser for all the arguments"""
@@ -180,8 +182,7 @@ def validate_args(args):
     globals()['build_benchmark_cmd'] = newmodule.build_benchmark_cmd
     globals()['decode_results'] = newmodule.decode_results
 
-
-def benchmark_speed(bench, target_args):
+def benchmark_speed(bench, target_args, stdouts):
     """Time the benchmark.  "target_args" is a namespace of arguments
        specific to the target.  Result is a time in milliseconds, or zero on
        failure.
@@ -191,16 +192,12 @@ def benchmark_speed(bench, target_args):
     appdir = os.path.join(gp['bd_benchdir'], bench)
     appexe = os.path.join(appdir, bench)
 
+    f = io.StringIO()
+
     if os.path.isfile(appexe):
         arglist = build_benchmark_cmd(bench, target_args)
         try:
-            res = subprocess.run(
-                arglist,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                cwd=appdir,
-                timeout=gp['timeout'],
-            )
+            res = subprocess.run(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=appdir, timeout=gp['timeout'])
             if res.returncode != 0:
                 log.warning(f'Warning: Run of {bench} failed.')
                 succeeded = False
@@ -213,12 +210,12 @@ def benchmark_speed(bench, target_args):
 
     # Process results
     if succeeded:
-        exec_time = decode_results(
-            res.stdout.decode('utf-8'), res.stderr.decode('utf-8')
-        )
+        with redirect_stdout(f):
+            exec_time = decode_results(res.stdout.decode('utf-8'), res.stderr.decode('utf-8'))
         succeeded = exec_time > 0
 
     if succeeded:
+        stdouts[bench] = f.getvalue()
         return exec_time
     else:
         for arg in arglist:
@@ -236,8 +233,8 @@ def benchmark_speed(bench, target_args):
             log.debug(res.stderr.decode('utf-8'))
         return 0.0
 
-def run_threads(bench, target_args, data_collect_q):
-    item = benchmark_speed(bench, target_args)
+def run_threads(bench, target_args, data_collect_q, stdouts):
+    item = benchmark_speed(bench, target_args, stdouts)
     data_collect_q.put_nowait([bench, item])
     
 def collect_data(benchmarks, remnant):
@@ -262,13 +259,14 @@ def collect_data(benchmarks, remnant):
     successful = True
     raw_data = {}
     rel_data = {}
+    stdouts = {}
 
     # Run the benchmarks in parallel
     if gp['sim_parallel']:
         collect_data_q = queue.Queue()
         benchmark_threads = list()
         for bench in benchmarks:
-            curr_thread = threading.Thread(target=run_threads, args=(bench, target_args, collect_data_q))
+            curr_thread = threading.Thread(target=run_threads, args=(bench, target_args, collect_data_q, stdouts))
             benchmark_threads.append(curr_thread)
             curr_thread.start()
         # Join threads
@@ -282,7 +280,12 @@ def collect_data(benchmarks, remnant):
     # Run the benchmarks in serial
     else: 
         for bench in benchmarks:
-            raw_data[bench] = benchmark_speed(bench, target_args)
+            raw_data[bench] = benchmark_speed(bench, target_args, stdouts)
+
+    for bench in benchmarks:
+        print(f"================={bench} results=================")
+        print(f"{stdouts[bench]}")
+        print(f"=================================================")
 
     for bench in benchmarks:
         rel_data[bench] = 0.0
