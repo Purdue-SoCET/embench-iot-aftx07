@@ -19,26 +19,15 @@ main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     volatile int result;
     int correct;
 
-    print("init board\n");
+    print("starting benchmark\n");
     initialise_board();
-    print("after init board\n");
-    print("init bench\n");
     initialise_benchmark();
-    print("after init bench\n");
-    print("warmup heat\n");
     warm_caches(WARMUP_HEAT);
-    print("after heat\n");
 
-    print("pre start trigger\n");
     start_trigger();
-    print("after start trigger\n");
-    print("pre benchmark\n");
     result = benchmark();
-    print("after benchmark\n");
-    // print_verify_benchmark(result);
-    print("pre stop trigger\n");
     stop_trigger();
-    print("after stop trigger\n");
+    print("benchmark completed");
 
     /* bmarks that use arrays will check a global array rather than int result */
 
