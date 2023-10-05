@@ -19,7 +19,6 @@ main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     volatile int result;
     int correct;
 
-    print("starting benchmark\n");
     initialise_board();
     initialise_benchmark();
     warm_caches(WARMUP_HEAT);
@@ -27,16 +26,10 @@ main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     start_trigger();
     result = benchmark();
     stop_trigger();
-    print("benchmark completed");
 
     /* bmarks that use arrays will check a global array rather than int result */
 
     correct = verify_benchmark(result);
-    if (!correct) {
-        print("BENCHMARK FAILED\n");
-    } else {
-        print("BENCHMARK PASSED\n");
-    }
 
     return (!correct);
 
