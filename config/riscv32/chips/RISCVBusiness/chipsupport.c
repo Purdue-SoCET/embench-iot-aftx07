@@ -113,35 +113,6 @@ void printhex(uint64_t x)
   cputstring(str);
 }
 
-static void evict(unsigned long addr)
-{
-  assert(addr >= PGSIZE && addr < MAX_TEST_PAGES * PGSIZE);
-  addr = addr/PGSIZE*PGSIZE;
-
-  freelist_t* node = &user_mapping[addr/PGSIZE];
-  if (node->addr)
-  {
-    // check accessed and dirty bits
-    assert(user_llpt[addr/PGSIZE] & PTE_A);
-    uintptr_t sstatus = set_csr(sstatus, SSTATUS_SUM);
-    if (memcmp((void*)addr, uva2kva(addr), PGSIZE)) {
-      assert(user_llpt[addr/PGSIZE] & PTE_D);
-      memcpy(uva2kva(addr), (void*)addr, PGSIZE);
-    }
-    write_csr(sstatus, sstatus);
-
-    user_mapping[addr/PGSIZE].addr = 0;
-
-    if (freelist_tail == 0)
-      freelist_head = freelist_tail = node;
-    else
-    {
-      freelist_tail->next = node;
-      freelist_tail = node;
-    }
-  }
-}
-
 extern int pf_filter(uintptr_t addr, uintptr_t *pte, int *copy);
 extern int trap_filter(trapframe_t *tf);
 
@@ -150,16 +121,17 @@ void handle_fault(uintptr_t addr, uintptr_t cause)
   uintptr_t filter_encodings = 0;
   int copy_page = 1;
 
-  assert(addr >= PGSIZE && addr < MAX_TEST_PAGES * PGSIZE);
+  assert(addr >= DRAM_BASE + PGSIZE && addr < DRAM_BASE + MAX_TEST_PAGES * PGSIZE);
   
   addr = addr/PGSIZE*PGSIZE;
+  uintptr_t vpn0 = addr - DRAM_BASE;
 
-  if (user_llpt[addr/PGSIZE]) {
-    if (!(user_llpt[addr/PGSIZE] & PTE_A)) {
-      user_llpt[addr/PGSIZE] |= PTE_A;
+  if (user_llpt[vpn0/PGSIZE]) {
+    if (!(user_llpt[vpn0/PGSIZE] & PTE_A)) {
+      user_llpt[vpn0/PGSIZE] |= PTE_A;
     } else {
-      assert(!(user_llpt[addr/PGSIZE] & PTE_D) && cause == CAUSE_STORE_PAGE_FAULT);
-      user_llpt[addr/PGSIZE] |= PTE_D;
+      assert(!(user_llpt[vpn0/PGSIZE] & PTE_D) && cause == CAUSE_STORE_PAGE_FAULT);
+      user_llpt[vpn0/PGSIZE] |= PTE_D;
     }
     flush_page(addr);
     return;
@@ -177,19 +149,19 @@ void handle_fault(uintptr_t addr, uintptr_t cause)
       new_pte = (node->addr >> PGSHIFT << PTE_PPN_SHIFT) | filter_encodings;
   }
 
-  user_llpt[addr/PGSIZE] = new_pte | PTE_A | PTE_D;
+  user_llpt[vpn0/PGSIZE] = new_pte | PTE_A | PTE_D;
   flush_page(addr);
 
   asm volatile ("fence.i");
 
-  assert(user_mapping[addr/PGSIZE].addr == 0);
-  user_mapping[addr/PGSIZE] = *node;
+  assert(user_mapping[vpn0/PGSIZE].addr == 0);
+  user_mapping[vpn0/PGSIZE] = *node;
 
   uintptr_t sstatus = set_csr(sstatus, SSTATUS_SUM);
-  memcpy((void*)addr, uva2kva(addr), PGSIZE);
+  memcpy((void*)addr, uva2kva(vpn0), PGSIZE);
   write_csr(sstatus, sstatus);
 
-  user_llpt[addr/PGSIZE] = new_pte;
+  user_llpt[vpn0/PGSIZE] = new_pte;
   flush_page(addr);
 
   asm volatile ("fence.i");
@@ -249,8 +221,8 @@ void vm_boot(uintptr_t test_addr)
 # error
 #endif
   // map user to lowermost megapage
-  l1pt[0] = ((pte_t)user_l2pt >> PGSHIFT << PTE_PPN_SHIFT) | PTE_V;
-  // l1pt[512] = ((pte_t)user_l2pt >> PGSHIFT << PTE_PPN_SHIFT) | PTE_V;
+  // l1pt[0] = ((pte_t)user_l2pt >> PGSHIFT << PTE_PPN_SHIFT) | PTE_V;
+  l1pt[512] = ((pte_t)user_l2pt >> PGSHIFT << PTE_PPN_SHIFT) | PTE_V;
   // map kernel to uppermost megapage
 #if SATP_MODE_CHOICE == SATP_MODE_SV48
   l1pt[PTES_PER_PT-1] = ((pte_t)kernel_l2pt >> PGSHIFT << PTE_PPN_SHIFT) | PTE_V;
@@ -310,7 +282,7 @@ void vm_boot(uintptr_t test_addr)
 
   trapframe_t tf;
   memset(&tf, 0, sizeof(tf));
-  tf.epc = test_addr - DRAM_BASE;
-  tf.gpr[2] = 0x80020000 - DRAM_BASE;
+  tf.epc = test_addr;
+  tf.gpr[2] = 0x80020000;
   pop_tf(&tf);
 }
