@@ -1,4 +1,4 @@
-#include "riscv_test.h"
+#include "chipsupport.h"
 
 #if __riscv_xlen == 64
 # define STORE    sd
@@ -70,7 +70,7 @@ handle_reset:
   add sp, sp, t0
   csrw mscratch, sp
   call extra_boot
-  la a0, userstart
+  la a0, main
   j vm_boot
 
   .globl  pop_tf
@@ -162,3 +162,7 @@ trap_entry:
 
   move  a0, sp
   j handle_trap
+
+  RVTEST_CODE_BEGIN
+
+  RVTEST_DATA_BEGIN

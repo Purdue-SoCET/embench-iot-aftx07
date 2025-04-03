@@ -20,37 +20,23 @@ GET_CSR(mcycle)
 GET_CSR(minstret)
 
 void __attribute__((interrupt)) __attribute__((aligned(4))) handler() {
-    uint32_t mepc_value;
-    uint32_t mcause_value;
-    asm volatile("csrr %0, mepc" : "=r"(mepc_value));
-    asm volatile("csrr %0, mcause" : "=r"(mcause_value));
-    print("mepc: %d\n", mepc_value);
-    print("mcause: %d\n", mcause_value);
+    uint32_t sepc_value;
+    uint32_t scause_value;
+    asm volatile("csrr %0, sepc" : "=r"(sepc_value));
+    asm volatile("csrr %0, scause" : "=r"(scause_value));
+    print("sepc: %d\n", sepc_value);
+    print("scause: %d\n", scause_value);
     while (1) {}
 }
 
 void initialise_board(void) {
-    uint32_t mtvec_value = (uint32_t)handler;
-    uint32_t mstatus_value = 0x8;
-    asm volatile("csrw mstatus, %0" : : "r"(mstatus_value));
-    asm volatile("csrw mtvec, %0" : : "r"(mtvec_value));
-    print("Initializing board!\n");
 }
 
 void print_verify_benchmark(int res) {
-    print("Benchmark Return: %d", res);
 }
 
 void __attribute__((noinline)) __attribute__((externally_visible)) start_trigger(void) {
-    print("Start trigger!\n");
-    start_cycles = get_mcycle();
-    start_instrs = get_minstret();
 }
 
 void __attribute__((noinline)) __attribute__((externally_visible)) stop_trigger(void) {
-    uint32_t end_cycles, end_instrs;
-    end_cycles = get_mcycle();
-    end_instrs = get_minstret();
-    print("Total cycles: %u\n", end_cycles - start_cycles);
-    print("Total Instructions: %u\n", end_instrs - start_instrs);
 }
