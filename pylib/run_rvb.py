@@ -65,10 +65,10 @@ def build_benchmark_cmd(bench, args):
     bd_src_cpy = copy.deepcopy(bd_src)
     bd_src_cpy = os.path.join(bd_src_cpy, bench)
     subprocess.run(meminit_elf_cpy, cwd=bd_src_cpy)
-    subprocess.run(['cp', bench, rvb_root + '/meminit.bin'], cwd=bd_src_cpy)
+    # subprocess.run(['cp', bench, rvb_root + '/meminit.bin'], cwd=bd_src_cpy)
 
     print(f"Running {bench}")
-    return [rvb_core, '--tohost-address', '2147487744' , '--max-sim-time', '4294967295', '--virtual', '--notrace', bd_src + '/' + bench +'/meminit.bin']
+    return [rvb_core, '--tohost-address', '2147487744' , '--max-sim-time', '429496729500', '--virtual', '--notrace', bd_src + '/' + bench +'/meminit.bin']
 
 def decode_results(stdout_str, stderr_str):
     print("================stdout================")

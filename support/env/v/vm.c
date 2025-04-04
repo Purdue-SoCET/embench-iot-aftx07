@@ -48,6 +48,7 @@ static void cputstring(const char* s)
   for (size_t i = 0; i < len; i++) {
     cputchar(*s++);  
   }
+  cputchar('\n');
 }
 
 static void terminate(int code)
@@ -174,6 +175,8 @@ void handle_fault(uintptr_t addr, uintptr_t cause)
 
   user_llpt[addr/PGSIZE] = new_pte | PTE_A | PTE_D;
   flush_page(addr);
+
+  asm volatile ("fence.i");
 
   assert(user_mapping[addr/PGSIZE].addr == 0);
   user_mapping[addr/PGSIZE] = *node;
