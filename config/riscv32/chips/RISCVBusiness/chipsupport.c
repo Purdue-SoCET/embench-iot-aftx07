@@ -130,11 +130,10 @@ void handle_fault(uintptr_t addr, uintptr_t cause)
     if (!(user_llpt[vpn0/PGSIZE] & PTE_A)) {
       user_llpt[vpn0/PGSIZE] |= PTE_A;
     } else {
-      // assert(!(user_llpt[vpn0/PGSIZE] & PTE_D) && cause == CAUSE_STORE_PAGE_FAULT);
+      assert(!(user_llpt[vpn0/PGSIZE] & PTE_D) && cause == CAUSE_STORE_PAGE_FAULT);
       user_llpt[vpn0/PGSIZE] |= PTE_D;
     }
     flush_page(addr);
-    asm volatile ("fence.i");  
     return;
   }
 
@@ -152,8 +151,6 @@ void handle_fault(uintptr_t addr, uintptr_t cause)
 
   user_llpt[vpn0/PGSIZE] = new_pte | PTE_A | PTE_D;
   flush_page(addr);
-
-  asm volatile ("fence.i");
 
   assert(user_mapping[vpn0/PGSIZE].addr == 0);
   user_mapping[vpn0/PGSIZE] = *node;

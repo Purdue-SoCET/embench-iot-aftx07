@@ -199,9 +199,11 @@ def benchmark_speed(bench, target_args, stdouts):
         try:
             res = subprocess.run(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=appdir, timeout=gp['timeout'])
             if res.returncode != 0:
+                print(res.stderr.decode('utf-8'))
                 log.warning(f'Warning: Run of {bench} failed.')
                 succeeded = False
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as timeErr:
+            print(timeErr.stdout.decode('utf-8'))
             log.warning(f'Warning: Run of {bench} timed out.')
             succeeded = False
     else:
@@ -283,9 +285,14 @@ def collect_data(benchmarks, remnant):
             raw_data[bench] = benchmark_speed(bench, target_args, stdouts)
 
     for bench in benchmarks:
-        print(f"================={bench} results=================")
-        print(f"{stdouts[bench]}")
-        print(f"=================================================")
+        if bench in stdouts.keys():
+            print(f"================={bench} results=================")
+            print(f"{stdouts[bench]}")
+            print(f"=================================================")
+        else:
+            print(f"================={bench} results=================")
+            print(f"DID NOT WORK")
+            print(f"=================================================")
 
     for bench in benchmarks:
         rel_data[bench] = 0.0
@@ -364,6 +371,16 @@ def main():
 
     # Find the benchmarks
     benchmarks = find_benchmarks()
+    # benchmarks.remove("edn")
+    # benchmarks.remove("qrduino")
+    # benchmarks.remove("slre")
+    # benchmarks.remove("huffbench")
+    # benchmarks.remove("statemate")
+    # benchmarks.remove("wikisort")
+    # benchmarks.remove("sglib-combined")
+    # benchmarks.remove("matmult-int")
+    # benchmarks.remove("nsichneu")
+    # benchmarks.remove("ud")
     log_benchmarks(benchmarks)
 
     # Collect the speed data for the benchmarks. Pass any remaining args.

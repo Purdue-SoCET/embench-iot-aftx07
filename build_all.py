@@ -466,6 +466,7 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
                 timeout=gp['timeout'],
             )
             if res.returncode != 0:
+                print(res.stderr.decode('utf-8'))
                 log.warning(
                     'Warning: Compilation of {root}{suff} from source directory {src} to binary directory {bin} failed'
                         .format(root=f_root, suff=suffix, src=srcdir, bin=bindir)
@@ -542,7 +543,7 @@ def compile_support():
 
     # Compile architecture, chip and board specific files.  Note that we only
     # create the build directory if it is needed here.
-    for dirtype in ['arch', 'chip', 'board']:
+    for dirtype in ['chip', 'arch', 'board']:
         # Support directory we are interested in
         dirname = gp[dirtype + 'dir']
         # List of files/subdirectories in that directory
@@ -590,7 +591,7 @@ def create_link_binlist(abs_bd):
 
 
     # Add arch, chip and board binaries
-    for dirtype in ['arch', 'chip', 'board']:
+    for dirtype in ['chip', 'arch', 'board']:
         # Build directory
         bindir = gp['bd_{dirtype}dir'.format(dirtype=dirtype)]
         # List of files in the build directory in alphabetical order
@@ -672,6 +673,7 @@ def link_benchmark(bench):
             timeout=gp['timeout'],
         )
         if res.returncode != 0:
+            print(res.stderr.decode('utf-8'))
             log.warning('Warning: Link of benchmark "{bench}" failed'.format(bench=bench))
             succeeded = False
 
