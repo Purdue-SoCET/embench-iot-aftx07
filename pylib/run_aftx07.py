@@ -67,7 +67,7 @@ def build_benchmark_cmd(bench, args):
     subprocess.run(['cp', bench, aftx07_root + '/meminit.bin'], cwd=bd_src_cpy)
 
     print(f"Running {bench}")
-    return [aftx07_root + '/aft_out/sim-verilator/Vaftx07']
+    return [aftx07_root + '/aft_out/socet_aft_aftx07_2.0.0/sim-verilator/Vaftx07']
 
 def decode_results(stdout_str, stderr_str):
     print("================stdout================")
