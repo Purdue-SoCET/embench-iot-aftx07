@@ -58,16 +58,15 @@ def build_benchmark_cmd(bench, args):
        namespace with target specific arguments"""
 
     bd_src = os.path.join(root, args.build_dir, 'src')
+    bd_src = os.path.join(bd_src, bench)
+
     meminit_elf_cpy = copy.deepcopy(meminit_elf)
     meminit_elf_cpy.append(bench)
     meminit_elf_cpy.append("meminit.bin")
-    bd_src_cpy = copy.deepcopy(bd_src)
-    bd_src_cpy = os.path.join(bd_src_cpy, bench)
-    subprocess.run(meminit_elf_cpy, cwd=bd_src_cpy)
-    subprocess.run(['cp', bench, aftx07_root + '/meminit.bin'], cwd=bd_src_cpy)
 
+    subprocess.run(meminit_elf_cpy, cwd=bd_src)
     print(f"Running {bench}")
-    return [aftx07_root + '/aft_out/socet_aft_aftx07_2.0.0/sim-verilator/Vaftx07']
+    return [aftx07_root + '/aft_out/socet_aft_aftx07_2.0.0/sim-verilator/Vaftx07', '--cycle-limit', '4294000000', '--meminit-file', bd_src + '/meminit.bin']
 
 def decode_results(stdout_str, stderr_str):
     print("================stdout================")
