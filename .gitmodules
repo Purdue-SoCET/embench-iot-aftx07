@@ -1,0 +1,3 @@
+[submodule "support/rvb-insight"]
+	path = support/rvb-insight
+	url = https://github.com/Purdue-SoCET/rvb-insight.git
