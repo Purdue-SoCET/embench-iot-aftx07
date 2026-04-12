@@ -54,9 +54,9 @@
 
 #define WRAP_CALL(...) \
     do { \
-        uint32_t var__ = rvb_insight_wrap_begin(); \
+        uint32_t var__ = __rvb_insight_wrap_begin(); \
         __VA_ARGS__; \
-        rvb_insight_wrap_end(var__); \
+        __rvb_insight_wrap_end(var__); \
     } while (0)
 
 #define rvb_insight_print(...) \

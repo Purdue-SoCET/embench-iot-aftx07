@@ -1,4 +1,4 @@
-#include "rvb-insight_.h"
+#include "rvb-insight.h"
 
 #include <string.h>
 
