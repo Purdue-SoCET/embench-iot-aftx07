@@ -175,7 +175,7 @@ static void rvb_print_string(const char *str){
     }
 }
 
-static void print_counters(const char *label, uint32_t mask){
+static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
     char buf[512];
     int idx = 0;
 
@@ -190,6 +190,8 @@ static void print_counters(const char *label, uint32_t mask){
         format(" %x %x", value, high, low);
         for(int j = 0; value[j]; j++) buf[idx++] = value[j];
     }
+    format(" %x", value, old_pc);
+    for(int j = 0; value[j]; j++) buf[idx++] = value[j];
     buf[idx++] = '\n';
     buf[idx++] = '\0';
 
@@ -198,16 +200,22 @@ static void print_counters(const char *label, uint32_t mask){
     mutex_unlock(&rvb_print_mutex);
 }
 
-void rvb_insight_print_default(void){
-    print_counters(cfgs[0].label, cfgs[0].hpm_enable);
+__attribute__((noinline)) void rvb_insight_print_default(void){
+    uint32_t old_pc;
+    asm volatile ("mv %0, ra" : "=r"(old_pc));
+    print_counters(cfgs[0].label, cfgs[0].hpm_enable, old_pc);
 }
-void rvb_insight_print_mask(uint32_t hpm_enable){
-    print_counters("mask", hpm_enable);
+__attribute__((noinline)) void rvb_insight_print_mask(uint32_t hpm_enable){
+    uint32_t old_pc;
+    asm volatile ("mv %0, ra" : "=r"(old_pc));
+    print_counters("mask", hpm_enable, old_pc);
 }
-void rvb_insight_print_cfg(const char *label){
+__attribute__((noinline)) void rvb_insight_print_cfg(const char *label){
+    uint32_t old_pc;
+    asm volatile ("mv %0, ra" : "=r"(old_pc));
     size_t idx = rvb_insight_search_cfgs(label);
     if(idx == SIZE_MAX) return;
-    print_counters(cfgs[idx].label, cfgs[idx].hpm_enable);
+    print_counters(cfgs[idx].label, cfgs[idx].hpm_enable, old_pc);
 }
 
 //try print bitmask first

@@ -8,11 +8,10 @@
     Returns the previously inhibited registers.
 */
 __attribute__((always_inline)) inline uint32_t __rvb_insight_wrap_begin(void) {
-    // TODO abuse jal to find current PC
-    uint32_t old_mcountinhibit;
+    uint32_t old_mcountinhibit = -1;
 
-    asm volatile ("csrr %0, mcountinhibit;"
-                  "csrs mcountinhibit, 31;" : "=r"(old_mcountinhibit));
+    // TODO verify this actually inhibits every register
+    asm volatile ("csrrw %0, mcountinhibit, %0;" : "+r"(old_mcountinhibit));
 
     return old_mcountinhibit;
 }
@@ -21,7 +20,7 @@ __attribute__((always_inline)) inline uint32_t __rvb_insight_wrap_begin(void) {
     Resets the count-inhibiting state of Zicntr/Zihpm registers to previous value.
 */
 __attribute__((always_inline)) inline void __rvb_insight_wrap_end(uint32_t old_mcountinhibit) {
-    asm volatile ("csrc mcountinhibit, %0;" : : "r"(~old_mcountinhibit));
+    asm volatile ("csrw mcountinhibit, %0;" : : "r"(old_mcountinhibit));
 }
 
 uint32_t __rvb_insight_read_register(uint32_t reg_num, bool high);
