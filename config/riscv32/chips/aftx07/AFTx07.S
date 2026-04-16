@@ -4,6 +4,8 @@
 .section .text.__aftx07_init
 __aftx07_init:
     la sp, __stack_top
+    csrr t1, mhartid
+    bne t1, zero, __inf_loop
     jal main
 
 .globl __inf_loop

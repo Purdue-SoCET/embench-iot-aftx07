@@ -49,6 +49,7 @@
 #include <string.h>
 
 #include "support.h"
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -420,6 +421,8 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
 
+    rvb_insight_set_cfg("test", 0x7);
+
     for (j = 0; j < rpt; j++) {
         init_heap_beebs((void *)heap, HEAP_SIZE);
 
@@ -428,6 +431,7 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
         // what we're timing
         compdecomp(test_data, TEST_SIZE);
+        rvb_insight_print("test");
     }
 
     // done

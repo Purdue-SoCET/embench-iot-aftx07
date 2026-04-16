@@ -1,5 +1,51 @@
 #include "rvb-insight.h"
 
+#ifndef MUTEX_H
+#define MUTEX_H
+
+// A simple mutex with a nonatomic lock and blocking lock/unlock methods. Make sure to zero
+// initialize!
+typedef struct {
+    int lock;
+} mutex_t;
+
+// Atomically locks the mutex. Will spin until the lock is acquired.
+void __attribute__((noinline)) mutex_lock(volatile mutex_t *m);
+// Nonatomically unlocks the mutex. Should only be called if the mutex is held.
+void __attribute__((noinline)) mutex_unlock(volatile mutex_t *m);
+
+void atomic_set(void *ptr) {
+    __asm__ volatile("li t0, 1\n"
+                     "1:\n"
+                     "lr.w t1, (%[addr])\n"
+                     "bnez t1, 1b\n"
+                     "sc.w t2, t0, (%[addr])\n"
+                     "bnez t2, 1b\n"
+                     :
+                     : [addr] "r"(ptr)
+                     : "t0", "t1", "t2");
+}
+
+void atomic_unset(void *ptr) {
+    __asm__ volatile("1:\n"
+                     "lr.w t0, (%[addr])\n"
+                     "sc.w t0, zero, (%[addr])\n"
+                     "bnez t0, 1b\n"
+                     :
+                     : [addr] "r"(ptr)
+                     : "t0");
+}
+
+void mutex_lock(volatile mutex_t *m) {
+    atomic_set((void *)&m->lock);
+}
+
+// This should only be called if we hold the lock, so it's okay to nonatomically unset it.
+void mutex_unlock(volatile mutex_t *m) {
+    m->lock = 0;
+}
+#endif
+
 #include <string.h>
 
 #define DEFAULT 0
@@ -65,27 +111,6 @@ size_t rvb_insight_search_cfgs(const char *label) {
 
 #include <stdint.h>
 #include <stdbool.h>
-
-/*
-    Enables count-inhibiting for all Zicntr/Zihpm registers.
-    Returns the previously inhibited registers.
-*/
-__attribute__((always_inline)) inline uint32_t __rvb_insight_wrap_begin(void) {
-    // TODO abuse jal to find current PC
-    uint32_t old_mcountinhibit;
-
-    asm volatile ("csrr %0, mcountinhibit;"
-                  "csrs mcountinhibit, 31;" : "=r"(old_mcountinhibit));
-
-    return old_mcountinhibit;
-}
-
-/*
-    Resets the count-inhibiting state of Zicntr/Zihpm registers to previous value.
-*/
-__attribute__((always_inline)) inline void __rvb_insight_wrap_end(uint32_t old_mcountinhibit) {
-    asm volatile ("csrc mcountinhibit, %0;" : : "r"(~old_mcountinhibit));
-}
 
 /*
     Reads a specific register reg_num, either the high or low half.
@@ -154,7 +179,7 @@ static void print_counters(const char *label, uint32_t mask){
     char buf[512];
     int idx = 0;
 
-    const char prefix[] = "Print ";
+    const char prefix[] = "[rvb-insight] ";
     for(int i = 0; prefix[i]; i++) buf[idx++] = prefix[i];
     for(int i = 0; label[i]; i++) buf[idx++] = label[i];
     char value[24];

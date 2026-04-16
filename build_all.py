@@ -436,6 +436,7 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
        everything in the event of failure
 
     """
+    print("Compiling", f_root)
     abs_src = os.path.join(srcdir, '{root}{suff}'.format(root=f_root, suff=suffix))
     abs_bin = os.path.join(bindir, '{root}.o'.format(root=f_root))
 
@@ -453,7 +454,7 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
     if not os.path.isfile(abs_bin) or (
             os.path.getmtime(abs_src) > os.path.getmtime(abs_bin)
     ):
-        if gp['verbose']:
+        if gp['verbose'] or True:
             log.debug('Compiling in directory {bin}'.format(bin=bindir))
             log.debug(arglist_to_str(arglist))
 
@@ -480,10 +481,10 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
 
         if not succeeded:
             log.debug('Command was:')
-            log.debug(arglist_to_str(arglist))
+            print(arglist_to_str(arglist))
 
-            log.debug(res.stdout.decode('utf-8'))
-            log.debug(res.stderr.decode('utf-8'))
+            print(res.stdout.decode('utf-8'))
+            print(res.stderr.decode('utf-8'))
 
     return succeeded
 
@@ -533,6 +534,7 @@ def compile_support():
     # Compile each general support file in the benchmark
     succeeded &= compile_file('beebsc', gp['supportdir'], gp['bd_supportdir'])
     succeeded &= compile_file('main', gp['supportdir'], gp['bd_supportdir'])
+    succeeded &= compile_file('rvb-insight', gp['supportdir'], gp['bd_supportdir'])
 
     # Compile dummy files that are needed
     for dlib in gp['dummy_libs']:
@@ -605,7 +607,7 @@ def create_link_binlist(abs_bd):
                 )
 
     # Add generic support
-    for supp in ['main.o', 'beebsc.o']:
+    for supp in ['main.o', 'beebsc.o', 'rvb-insight.o']:
         binf = os.path.join(gp['bd_supportdir'], supp)
         if os.path.isfile(binf):
             binlist.extend(gp['ld_input_pattern'].format(binf).split())
@@ -657,6 +659,7 @@ def link_benchmark(bench):
     if not binlist:
         succeeded = False
     arglist = create_link_arglist(bench, binlist)
+    print(binlist, arglist)
 
     # Run the link
     if gp['verbose']:
@@ -675,8 +678,8 @@ def link_benchmark(bench):
             log.warning('Warning: Link of benchmark "{bench}" failed'.format(bench=bench))
             succeeded = False
 
-        log.debug(res.stdout.decode('utf-8'))
-        log.debug(res.stderr.decode('utf-8'))
+        print(res.stdout.decode('utf-8'))
+        print(res.stderr.decode('utf-8'))
 
     except subprocess.TimeoutExpired:
         log.warning('Warning: link of benchmark "{bench}" timed out'.format(bench=bench))
