@@ -82,9 +82,9 @@ void rvb_insight_print_cfg(const char *label);
 
 #define rvb_insight_print(...) \
     WRAP_CALL( \
-        _Generic((0, ##__VA_ARGS__ +0), \
-            default: rvb_insight_print_default, \
-            uint32_t: rvb_insight_print_mask, \
+        _Generic((NULL, ##__VA_ARGS__ +0), \
+            default: rvb_insight_print_mask, \
+            void *: rvb_insight_print_default, \
             char *: rvb_insight_print_cfg \
         ) (__VA_ARGS__) \
     )

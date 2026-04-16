@@ -15,6 +15,7 @@
 
 #include "qrencode.h"
 #include "support.h"
+#include "rvb-insight.h"
 
 #include <string.h>
 
@@ -46,6 +47,9 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
     static const char *in_encode = "http://www.mageec.com";
     int i;
 
+    rvb_insight_set_default_cfg(0x7);
+    rvb_insight_set_cfg("test", 0x5);
+
     for (i = 0; i < rpt; i++) {
         encode = in_encode;
         size = 22;
@@ -59,6 +63,11 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
         qrencode();
         freeframe();
         freeecc();
+
+        rvb_insight_print();
+        rvb_insight_print("test");
+        // rvb_insight_print(0x3 | HPM_MASK(HPM_iTLB_HIT)); // broken for some reason
+        rvb_insight_print(0x3);
     }
 
     return 0;

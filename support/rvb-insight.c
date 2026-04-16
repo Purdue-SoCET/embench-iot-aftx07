@@ -53,6 +53,12 @@ void mutex_unlock(volatile mutex_t *m) {
 struct RvbInsightConfig cfgs[MAX_CFGS];
 
 void rvb_insight_set_cfg(const char *label, uint32_t hpm_enable)
+// TODO merge changes back into the rvb-insight repo
+// TODO make print function for setting a config
+// TODO fix parse script
+// TODO make timers to periodically interrupt and do the thing
+// so what we can do is disable the periodic interrupt during prints
+// and then re-enable after exiting
 {
     if (!label) {
         rvb_insight_set_default_cfg(hpm_enable);
@@ -203,7 +209,7 @@ static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
 __attribute__((noinline)) void rvb_insight_print_default(void){
     uint32_t old_pc;
     asm volatile ("mv %0, ra" : "=r"(old_pc));
-    print_counters(cfgs[0].label, cfgs[0].hpm_enable, old_pc);
+    print_counters("default", cfgs[0].hpm_enable, old_pc);
 }
 __attribute__((noinline)) void rvb_insight_print_mask(uint32_t hpm_enable){
     uint32_t old_pc;

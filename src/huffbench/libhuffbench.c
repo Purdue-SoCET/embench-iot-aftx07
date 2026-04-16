@@ -298,6 +298,8 @@ void compdecomp(byte *data, size_t data_len) {
     // printf("data len = %u\n",data_len);
     // printf("comp len = %u\n",comp_len);
 
+    rvb_insight_print("test");
+
     /*
        DECOMPRESSION
      */
@@ -395,6 +397,8 @@ void compdecomp(byte *data, size_t data_len) {
             ++cptr;
         }
     }
+
+    rvb_insight_print("test");
 
     // remove work areas
     free_beebs(comp);

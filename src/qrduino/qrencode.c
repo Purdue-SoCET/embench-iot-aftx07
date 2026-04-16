@@ -14,6 +14,7 @@
    Original code from: https://github.com/tz1/qrduino */
 
 #include <string.h>
+#include "rvb-insight.h"
 
 #include "qrencode.h"
 

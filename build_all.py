@@ -411,13 +411,13 @@ def set_parameters(args):
 
 def log_parameters():
     """Record all the global parameters in the log"""
-    log.debug('Global parameters')
-    log.debug('=================')
+    log.info('Global parameters')
+    log.info('=================')
 
     for key, val in gp.items():
-        log.debug('{key:<21}: {val}'.format(key=key, val=val))
+        log.info('{key:<21}: {val}'.format(key=key, val=val))
 
-    log.debug('')
+    log.info('')
 
 
 def set_environ():
@@ -436,7 +436,6 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
        everything in the event of failure
 
     """
-    print("Compiling", f_root)
     abs_src = os.path.join(srcdir, '{root}{suff}'.format(root=f_root, suff=suffix))
     abs_bin = os.path.join(bindir, '{root}.o'.format(root=f_root))
 
@@ -454,9 +453,9 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
     if not os.path.isfile(abs_bin) or (
             os.path.getmtime(abs_src) > os.path.getmtime(abs_bin)
     ):
-        if gp['verbose'] or True:
-            log.debug('Compiling in directory {bin}'.format(bin=bindir))
-            log.debug(arglist_to_str(arglist))
+        if gp['verbose']:
+            log.info('Compiling in directory {bin}'.format(bin=bindir))
+            log.info(arglist_to_str(arglist))
 
         try:
             res = subprocess.run(
@@ -480,11 +479,11 @@ def compile_file(f_root, srcdir, bindir, suffix='.c'):
             succeeded = False
 
         if not succeeded:
-            log.debug('Command was:')
-            print(arglist_to_str(arglist))
+            log.info('Command was:')
+            log.info(arglist_to_str(arglist))
 
-            print(res.stdout.decode('utf-8'))
-            print(res.stderr.decode('utf-8'))
+            log.info(res.stdout.decode('utf-8'))
+            log.info(res.stderr.decode('utf-8'))
 
     return succeeded
 
@@ -659,12 +658,11 @@ def link_benchmark(bench):
     if not binlist:
         succeeded = False
     arglist = create_link_arglist(bench, binlist)
-    print(binlist, arglist)
 
     # Run the link
     if gp['verbose']:
-        log.debug('Linking in directory {abs_bd_b}'.format(abs_bd_b=abs_bd_b))
-        log.debug(arglist_to_str(arglist))
+        log.info('Linking in directory {abs_bd_b}'.format(abs_bd_b=abs_bd_b))
+        log.info(arglist_to_str(arglist))
 
     try:
         res = subprocess.run(
@@ -678,17 +676,17 @@ def link_benchmark(bench):
             log.warning('Warning: Link of benchmark "{bench}" failed'.format(bench=bench))
             succeeded = False
 
-        print(res.stdout.decode('utf-8'))
-        print(res.stderr.decode('utf-8'))
+        log.info(res.stdout.decode('utf-8'))
+        log.info(res.stderr.decode('utf-8'))
 
     except subprocess.TimeoutExpired:
         log.warning('Warning: link of benchmark "{bench}" timed out'.format(bench=bench))
         succeeded = False
 
     if not succeeded:
-        log.debug('In directory "' + abs_bd_b + '"')
-        log.debug('Command was:')
-        log.debug(arglist_to_str(arglist))
+        log.info('In directory "' + abs_bd_b + '"')
+        log.info('Command was:')
+        log.info(arglist_to_str(arglist))
 
     return succeeded
 
@@ -722,8 +720,8 @@ def main():
     set_parameters(args)
     log_parameters()
 
-    log.debug('General log')
-    log.debug('===========')
+    log.info('General log')
+    log.info('===========')
 
     # Set up additional environment variables.
     set_environ()
@@ -731,17 +729,17 @@ def main():
     # Track success
     successful = compile_support()
     if successful:
-        log.debug('Compilation of support files successful')
+        log.info('Compilation of support files successful')
 
     for bench in benchmarks:
         res = compile_benchmark(bench)
         successful &= res
         if res:
-            log.debug('Compilation of benchmark "{bench}" successful'.format(bench=bench))
+            log.info('Compilation of benchmark "{bench}" successful'.format(bench=bench))
             res = link_benchmark(bench)
             successful &= res
             if res:
-                log.debug('Linking of benchmark "{bench}" successful'.format(bench=bench))
+                log.info('Linking of benchmark "{bench}" successful'.format(bench=bench))
                 log.info(bench)
 
     if successful:
