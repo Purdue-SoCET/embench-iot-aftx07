@@ -425,7 +425,11 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
 
-    rvb_insight_set_cfg("test", 0x7);
+    rvb_insight_set_cfg("test", 0xF);
+    //uint32_t mstatus = 0xffffffff;
+    //asm volatile("csrw mcounteren, %0" : "=r"(mstatus));
+    //uint32_t mval;
+    //asm volatile("csrr %0, hpmcounter3h" : "=r"(mval));
 
     for (j = 0; j < rpt; j++) {
         init_heap_beebs((void *)heap, HEAP_SIZE);

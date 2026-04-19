@@ -64,20 +64,21 @@ void rvb_insight_set_cfg(const char *label, uint32_t hpm_enable)
         rvb_insight_set_default_cfg(hpm_enable);
         return;
     }
-    
+
     size_t i = rvb_insight_search_cfgs(label);
     if (i == SIZE_MAX) {
         i = rvb_insight_search_cfgs(NULL);
     }
-    
+
     if (i == SIZE_MAX) {
-        // TODO print error
+	rvb_insight_error("No empty config slots for label ", label);
     } else {
         cfgs[i] = (struct RvbInsightConfig) {label, hpm_enable};
+    	rvb_insight_configure(i);
     }
 }
 
-void rvb_insight_reset_cfgs() 
+void rvb_insight_reset_cfgs()
 {
     memset(cfgs, 0, sizeof(cfgs));
     rvb_insight_set_default_cfg(INT32_MAX);
@@ -89,7 +90,7 @@ uint32_t rvb_insight_get_cfg_mask(const char *label)
     if (i != SIZE_MAX) {
         return cfgs[i].hpm_enable;
     } else {
-        // TODO print error
+	rvb_insight_error("Config not found for label ", label);
         return -1;
     }
 }
@@ -97,6 +98,7 @@ uint32_t rvb_insight_get_cfg_mask(const char *label)
 void rvb_insight_set_default_cfg(uint32_t hpm_enable)
 {
     cfgs[DEFAULT].hpm_enable = hpm_enable;
+    rvb_insight_configure(DEFAULT);
 }
 
 size_t rvb_insight_search_cfgs(const char *label) {
@@ -129,6 +131,8 @@ uint32_t __rvb_insight_read_register(uint32_t reg_num, bool high) {
     // I don't know if there's a better way to do this...
     // But it (usually) compiles to a single instruction when inlined :)
     uint32_t reg = -1;
+    //asm volatile ("csrr %0, mcounteren;" : "=r"(reg));
+    //return reg;
     switch (reg_num | ((uint32_t) !!high << 5)) {
         case 0:  asm volatile ("csrr %0, cycle;"        : "=r"(reg)); break;
         case 2:  asm volatile ("csrr %0, instret;"      : "=r"(reg)); break;
@@ -191,7 +195,9 @@ static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
     char value[24];
     for(int i = 0; i < 32; i++){
         if(!(mask & (1u << i))) continue;
-        uint32_t high = __rvb_insight_read_register(i, true);
+	uint32_t high = 0;
+	if (i < 3) // Reading high half of an hpm counter raises an exception, for some reason
+        	high = __rvb_insight_read_register(i, true);
         uint32_t low = __rvb_insight_read_register(i, false);
         format(" %x %x", value, high, low);
         for(int j = 0; value[j]; j++) buf[idx++] = value[j];
@@ -209,7 +215,7 @@ static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
 __attribute__((noinline)) void rvb_insight_print_default(void){
     uint32_t old_pc;
     asm volatile ("mv %0, ra" : "=r"(old_pc));
-    print_counters("default", cfgs[0].hpm_enable, old_pc);
+    print_counters("default", cfgs[DEFAULT].hpm_enable, old_pc);
 }
 __attribute__((noinline)) void rvb_insight_print_mask(uint32_t hpm_enable){
     uint32_t old_pc;
@@ -224,4 +230,43 @@ __attribute__((noinline)) void rvb_insight_print_cfg(const char *label){
     print_counters(cfgs[idx].label, cfgs[idx].hpm_enable, old_pc);
 }
 
-//try print bitmask first
+void rvb_insight_configure(size_t index) {
+    static char buf[128] = "[rvb-insight-cfg] ";
+    uint32_t idx = strlen("[rvb-insight-cfg] ");
+
+    // Copy the label
+    if (index == DEFAULT) {
+        for (int i = 0; i < 7; i++) buf[idx++] = "default"[i];
+    } else {
+        for (int i = 0; cfgs[index].label[i]; i++) buf[idx++] = cfgs[index].label[i];
+    }
+
+    // Copy the mask, null terminate
+    format(" %x\n", buf + idx, cfgs[index].hpm_enable);
+
+    // Print
+    mutex_lock(&rvb_print_mutex);
+    rvb_print_string(buf);
+    mutex_unlock(&rvb_print_mutex);
+}
+
+void rvb_insight_error(const char *err_txt, const char *label) {
+    static char buf[128] = "[rvb-insight-err] ";
+    uint32_t idx = strlen("[rvb-insight-err] ");
+
+    // Copy the error text
+    for (int i = 0; err_txt[i]; i++) buf[idx++] = err_txt[i];
+
+    // Copy the label
+    for (int i = 0; label[i]; i++) buf[idx++] = label[i];
+
+    // Null terminate
+    buf[idx++] = '\n';
+    buf[idx++] = '\0';
+
+    // Print
+    mutex_lock(&rvb_print_mutex);
+    rvb_print_string(buf);
+    mutex_unlock(&rvb_print_mutex);
+}
+

@@ -33,7 +33,7 @@
 #ifndef true
 #define true 1
 #define false 0
-typedef uint8_t bool;
+typedef uint8_t _bool;
 #endif
 
 #define Var(name, value, type) type name = value
@@ -57,11 +57,11 @@ typedef struct {
     int index;
 } Test;
 
-bool TestCompare(Test item1, Test item2) {
+_bool TestCompare(Test item1, Test item2) {
     return (item1.value < item2.value);
 }
 
-typedef bool (*Comparison)(Test, Test);
+typedef _bool (*Comparison)(Test, Test);
 
 /* structure to represent ranges within the array */
 typedef struct {

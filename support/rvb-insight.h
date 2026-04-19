@@ -80,6 +80,9 @@ void rvb_insight_print_default(void);
 void rvb_insight_print_mask(uint32_t hpm_enable);
 void rvb_insight_print_cfg(const char *label);
 
+void rvb_insight_configure(size_t index);
+void rvb_insight_error(const char *err_txt, const char *label);
+
 #define rvb_insight_print(...) \
     WRAP_CALL( \
         _Generic((NULL, ##__VA_ARGS__ +0), \
