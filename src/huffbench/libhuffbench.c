@@ -158,6 +158,7 @@ void compdecomp(byte *data, size_t data_len) {
     for (i = 0; i < data_len; ++i) {
         ++freq[(size_t)(*dptr)];
         ++dptr;
+        rvb_insight_print("huff_trace");
     }
 
     // create indirect heap based on frequencies
@@ -168,10 +169,13 @@ void compdecomp(byte *data, size_t data_len) {
             heap[n] = i;
             ++n;
         }
+        rvb_insight_print("huff_trace");
     }
 
-    for (i = n; i > 0; --i)
+    for (i = n; i > 0; --i) {
         heap_adjust(freq, heap, n, i);
+        rvb_insight_print("huff_trace");
+    }
 
     // generate a trie from heap
     size_t temp;
@@ -196,6 +200,7 @@ void compdecomp(byte *data, size_t data_len) {
 
         // adjust the heap again
         heap_adjust(freq, heap, n, 1);
+        rvb_insight_print("huff_trace");
     }
 
     link[256 + n] = 0;
@@ -239,6 +244,7 @@ void compdecomp(byte *data, size_t data_len) {
             if (i > maxi)
                 maxi = i;
         }
+        rvb_insight_print("huff_trace");
     }
 
     // make sure longest codes fit in unsigned long-bits
@@ -288,6 +294,7 @@ void compdecomp(byte *data, size_t data_len) {
         }
 
         ++dptr;
+        rvb_insight_print("huff_trace");
     }
 
     // output any incomplete data_len and bits
@@ -297,8 +304,6 @@ void compdecomp(byte *data, size_t data_len) {
 
     // printf("data len = %u\n",data_len);
     // printf("comp len = %u\n",comp_len);
-
-    rvb_insight_print("test");
 
     /*
        DECOMPRESSION
@@ -339,6 +344,7 @@ void compdecomp(byte *data, size_t data_len) {
 
             heap2[j] = k; // store link in heap2
         }
+        rvb_insight_print("huff_trace");
     }
 
     // sort outc based on heap2
@@ -355,6 +361,7 @@ void compdecomp(byte *data, size_t data_len) {
 
         heap2[j] = t;
         outc[j] = c;
+        rvb_insight_print("huff_trace");
     }
 
     // find first character in table
@@ -396,12 +403,12 @@ void compdecomp(byte *data, size_t data_len) {
             mask = 0x80;
             ++cptr;
         }
+        rvb_insight_print("huff_trace");
     }
-
-    rvb_insight_print("test");
 
     // remove work areas
     free_beebs(comp);
+    rvb_insight_print("huff_trace");
 }
 
 int verify_benchmark(int res __attribute((unused))) {
@@ -425,11 +432,8 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
 
-    rvb_insight_set_cfg("test", 0xF);
-    //uint32_t mstatus = 0xffffffff;
-    //asm volatile("csrw mcounteren, %0" : "=r"(mstatus));
-    //uint32_t mval;
-    //asm volatile("csrr %0, hpmcounter3h" : "=r"(mval));
+    rvb_insight_set_cfg("huff_trace", 0x1ffff);
+    rvb_insight_print("huff_trace");
 
     for (j = 0; j < rpt; j++) {
         init_heap_beebs((void *)heap, HEAP_SIZE);
@@ -437,9 +441,10 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
         // initialization
         memcpy(test_data, orig_data, TEST_SIZE * sizeof(orig_data[0]));
 
+        rvb_insight_print("huff_trace");
+
         // what we're timing
         compdecomp(test_data, TEST_SIZE);
-        rvb_insight_print("test");
     }
 
     // done

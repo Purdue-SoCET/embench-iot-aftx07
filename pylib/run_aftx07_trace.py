@@ -30,7 +30,7 @@ root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 aftx07_root = os.getenv('AFTX07_ROOT')
 cpu_mhz = 1
-meminit_elf = ['riscv64-elf-objcopy', '-O', 'binary']
+meminit_elf = ['riscv64-unknown-elf-objcopy', '-O', 'binary']
 bd_src = os.path.join(root, "bd_aftx07_trace/src/")
 cp = ['cp', 'meminit.bin', aftx07_root + '/meminit.bin']
 
