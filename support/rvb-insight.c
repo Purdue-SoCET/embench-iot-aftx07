@@ -193,6 +193,10 @@ static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
     for(int i = 0; prefix[i]; i++) buf[idx++] = prefix[i];
     for(int i = 0; label[i]; i++) buf[idx++] = label[i];
     char value[24];
+
+    format(" %x", value, old_pc);
+    for(int j = 0; value[j]; j++) buf[idx++] = value[j];
+
     for(int i = 0; i < 32; i++){
         if(!(mask & (1u << i))) continue;
 	uint32_t high = 0;
@@ -202,8 +206,6 @@ static void print_counters(const char *label, uint32_t mask, uint32_t old_pc){
         format(" %x %x", value, high, low);
         for(int j = 0; value[j]; j++) buf[idx++] = value[j];
     }
-    format(" %x", value, old_pc);
-    for(int j = 0; value[j]; j++) buf[idx++] = value[j];
     buf[idx++] = '\n';
     buf[idx++] = '\0';
 
