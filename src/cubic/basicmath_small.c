@@ -10,6 +10,7 @@
 #include "snipmath.h"
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -45,6 +46,8 @@ int benchmark(void) {
 static int benchmark_body(int rpt) {
     int i;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (i = 0; i < rpt; i++) {
         double a1 = 1.0, b1 = -10.5, c1 = 32.0, d1 = -30.0;
         double a2 = 1.0, b2 = -4.5, c2 = 17.0, d2 = -30.0;
@@ -54,6 +57,7 @@ static int benchmark_body(int rpt) {
 
         double output[48] = {0};
         double *output_pos = &(output[0]);
+        rvb_insight_print("trace");
 
         /* solve some cubic functions */
         /* should get 3 solutions: 2, 6 & 2.5   */

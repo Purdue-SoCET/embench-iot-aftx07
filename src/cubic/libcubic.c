@@ -22,6 +22,7 @@
 
 #include "snipmath.h"
 #include <math.h>
+#include "rvb-insight.h"
 
 void SolveCubic(double a, double b, double c, double d, int *solutions, double *x) {
     long double a1 = (long double)(b / a);
@@ -32,6 +33,7 @@ void SolveCubic(double a, double b, double c, double d, int *solutions, double *
     double R2_Q3 = (double)(R * R - Q * Q * Q);
 
     double theta;
+    rvb_insight_print("trace");
 
     if (R2_Q3 <= 0) {
         *solutions = 3;

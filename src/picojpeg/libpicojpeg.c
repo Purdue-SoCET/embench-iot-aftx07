@@ -17,6 +17,7 @@
 // Also integrated and tested changes from Chris Phoenix <cphoenix@gmail.com>.
 //------------------------------------------------------------------------------
 #include "picojpeg.h"
+#include "rvb-insight.h"
 //------------------------------------------------------------------------------
 // Set to 1 if right shifts on signed ints are always unsigned (logical) shifts
 // When 1, arithmetic right shifts will be emulated by using a logical shift
@@ -242,6 +243,7 @@ static uint8 gReduce;
 //------------------------------------------------------------------------------
 static void fillInBuf(void) {
     unsigned char status;
+    rvb_insight_print("trace");
 
     // Reserve a few bytes at the beginning of the buffer for putting back ("stuffing") chars.
     gInBufOfs = 4;
@@ -298,6 +300,7 @@ static PJPG_INLINE uint8 getOctet(uint8 FFCheck) {
 static uint16 getBits(uint8 numBits, uint8 FFCheck) {
     uint8 origBits = numBits;
     uint16 ret = gBitBuf;
+    rvb_insight_print("trace");
 
     if (numBits > 8) {
         numBits -= 8;
@@ -445,6 +448,7 @@ static PJPG_INLINE uint8 huffDecode(const HuffTable *pHuffTable, const uint8 *pH
     uint8 i = 0;
     uint8 j;
     uint16 code = getBit();
+    rvb_insight_print("trace");
 
     // This func only reads a bit at a time, which on modern CPU's is not terribly efficient.
     // But on microcontrollers without strong integer shifting support this seems like a
@@ -474,6 +478,7 @@ static PJPG_INLINE uint8 huffDecode(const HuffTable *pHuffTable, const uint8 *pH
 static void huffCreate(const uint8 *pBits, HuffTable *pHuffTable) {
     uint8 i = 0;
     uint8 j = 0;
+    rvb_insight_print("trace");
 
     uint16 code = 0;
 
@@ -547,6 +552,7 @@ static uint16 getMaxHuffCodes(uint8 index) {
 static uint8 readDHTMarker(void) {
     uint8 bits[16];
     uint16 left = getBits1(16);
+    rvb_insight_print("trace");
 
     if (left < 2)
         return PJPG_BAD_DHT_MARKER;
@@ -602,6 +608,7 @@ static void createWinogradQuant(int16 *pQuant);
 
 static uint8 readDQTMarker(void) {
     uint16 left = getBits1(16);
+    rvb_insight_print("trace");
 
     if (left < 2)
         return PJPG_BAD_DQT_MARKER;
@@ -654,6 +661,7 @@ static uint8 readDQTMarker(void) {
 static uint8 readSOFMarker(void) {
     uint8 i;
     uint16 left = getBits1(16);
+    rvb_insight_print("trace");
 
     if (getBits1(8) != 8)
         return PJPG_BAD_PRECISION;
@@ -729,6 +737,7 @@ volatile uint8 successive_high, successive_low;
 static uint8 readSOSMarker(void) {
     uint8 i;
     uint16 left = getBits1(16);
+    rvb_insight_print("trace");
 
     gCompsInScan = (uint8)getBits1(8);
 
@@ -801,6 +810,7 @@ static uint8 nextMarker(void) {
 // Process markers. Returns when an SOFx, SOI, EOI, or SOS marker is
 // encountered.
 static uint8 processMarkers(uint8 *pMarker) {
+    rvb_insight_print("trace");
     for (;;) {
         uint8 c = nextMarker();
 
@@ -869,6 +879,7 @@ static uint8 processMarkers(uint8 *pMarker) {
 // Finds the start of image (SOI) marker.
 static uint8 locateSOIMarker(void) {
     uint16 bytesleft;
+    rvb_insight_print("trace");
 
     uint8 lastchar = (uint8)getBits1(8);
 
@@ -913,6 +924,7 @@ static uint8 locateSOIMarker(void) {
 // Find a start of frame (SOF) marker.
 static uint8 locateSOFMarker(void) {
     uint8 c;
+    rvb_insight_print("trace");
 
     uint8 status = locateSOIMarker();
     if (status)
@@ -953,6 +965,7 @@ static uint8 locateSOFMarker(void) {
 static uint8 locateSOSMarker(uint8 *pFoundEOI) {
     uint8 c;
     uint8 status;
+    rvb_insight_print("trace");
 
     *pFoundEOI = 0;
 
@@ -1013,6 +1026,7 @@ static uint8 processRestart(void) {
     // 1536 is a "fudge factor" that determines how much to scan.
     uint16 i;
     uint8 c = 0;
+    rvb_insight_print("trace");
 
     for (i = 1536; i > 0; i--)
         if (getChar() == 0xFF)
@@ -1113,6 +1127,7 @@ static uint8 initScan(void) {
 
 //------------------------------------------------------------------------------
 static uint8 initFrame(void) {
+    rvb_insight_print("trace");
     if (gCompsInFrame == 1) {
         if ((gCompHSamp[0] != 1) || (gCompVSamp[0] != 1))
             return PJPG_UNSUPPORTED_SAMP_FACTORS;
@@ -1211,6 +1226,7 @@ const uint8 gWinogradQuant[] = {
 // Multiply quantization matrix by the Winograd IDCT scale factors
 static void createWinogradQuant(int16 *pQuant) {
     uint8 i;
+    rvb_insight_print("trace");
 
     for (i = 0; i < 64; i++) {
         long x = pQuant[i];
@@ -1711,6 +1727,7 @@ static void convertCr(uint8 dstOfs) {
 static void transformBlock(uint8 mcuBlock) {
     idctRows();
     idctCols();
+    rvb_insight_print("trace");
 
     switch (gScanType) {
     case PJPG_GRAYSCALE: {
@@ -1831,6 +1848,7 @@ static void transformBlock(uint8 mcuBlock) {
 static void transformBlockReduce(uint8 mcuBlock) {
     uint8 c = clamp(PJPG_DESCALE(gCoeffBuf[0]) + 128);
     int16 cbG, cbB, crR, crG;
+    rvb_insight_print("trace");
 
     switch (gScanType) {
     case PJPG_GRAYSCALE: {
@@ -2014,6 +2032,7 @@ static void transformBlockReduce(uint8 mcuBlock) {
 static uint8 decodeNextMCU(void) {
     uint8 status;
     uint8 mcuBlock;
+    rvb_insight_print("trace");
 
     if (gRestartInterval) {
         if (gRestartsLeft == 0) {
@@ -2139,6 +2158,7 @@ static uint8 decodeNextMCU(void) {
 //------------------------------------------------------------------------------
 unsigned char pjpeg_decode_mcu(void) {
     uint8 status;
+    rvb_insight_print("trace");
 
     if (gCallbackStatus)
         return gCallbackStatus;

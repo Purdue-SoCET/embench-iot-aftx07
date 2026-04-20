@@ -140,6 +140,7 @@ def find_benchmarks():
             benchmarks.append(bench)
 
     benchmarks.sort()
+    # benchmarks = benchmarks[0:1]
 
     return benchmarks
 

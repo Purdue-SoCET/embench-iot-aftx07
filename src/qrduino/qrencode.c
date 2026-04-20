@@ -151,6 +151,7 @@ static void appendrs(unsigned char *data, unsigned char dlen, unsigned char *ecb
 static void stringtoqr(void) {
     unsigned i;
     unsigned size, max;
+    rvb_insight_print("trace");
     size = strlen((char *)strinbuf);
 
     max = datablkw * (neccblk1 + neccblk2) + neccblk2;
@@ -185,6 +186,7 @@ static void stringtoqr(void) {
         // buffer has room        if (i == max)            break;
         strinbuf[i++] = 0x11;
     }
+    rvb_insight_print("trace");
 
     // calculate and append ECC
     unsigned char *ecc = &strinbuf[max];
@@ -196,11 +198,13 @@ static void stringtoqr(void) {
         dat += datablkw;
         ecc += eccblkwid;
     }
+    rvb_insight_print("trace");
     for (i = 0; i < neccblk2; i++) {
         appendrs(dat, datablkw + 1, ecc, eccblkwid, qrframe);
         dat += datablkw + 1;
         ecc += eccblkwid;
     }
+    rvb_insight_print("trace");
     unsigned j;
     dat = qrframe;
     for (i = 0; i < datablkw; i++) {
@@ -209,11 +213,13 @@ static void stringtoqr(void) {
         for (j = 0; j < neccblk2; j++)
             *dat++ = strinbuf[(neccblk1 * datablkw) + i + (j * (datablkw + 1))];
     }
+    rvb_insight_print("trace");
     for (j = 0; j < neccblk2; j++)
         *dat++ = strinbuf[(neccblk1 * datablkw) + i + (j * (datablkw + 1))];
     for (i = 0; i < eccblkwid; i++)
         for (j = 0; j < neccblk1 + neccblk2; j++)
             *dat++ = strinbuf[max + i + j * eccblkwid];
+    rvb_insight_print("trace");
     memcpy(strinbuf, qrframe, max + eccblkwid * (neccblk1 + neccblk2));
 }
 
@@ -502,6 +508,8 @@ void qrencode() {
     unsigned char best = 0;
     unsigned char i;
     unsigned badness;
+
+    rvb_insight_print("trace");
 
     stringtoqr();
     fillframe(); // Inisde loop to avoid having separate mask buffer

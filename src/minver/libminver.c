@@ -58,6 +58,7 @@
 #include "support.h"
 #include <math.h>
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -93,6 +94,7 @@ static float minver_fabs(float n) {
 int mmul(int row_a, int col_a, int row_b, int col_b) {
     int i, j, k, row_c, col_c;
     float w;
+    rvb_insight_print("trace");
 
     row_c = row_a;
     col_c = col_b;
@@ -114,6 +116,7 @@ int mmul(int row_a, int col_a, int row_b, int col_b) {
 int minver(int row, int col, float eps) {
     int work[500], i, j, k, r, iw, u, v;
     float w, wmax, pivot, api, w1;
+    rvb_insight_print("trace");
 
     r = w = 0;
     if (row < 2 || row > 500 || eps <= 0.0)
@@ -226,8 +229,11 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (i = 0; i < rpt; i++) {
         float eps = 1.0e-6;
+        rvb_insight_print("trace");
 
         memcpy(a, a_ref, 3 * 3 * sizeof(a[0][0]));
         minver(3, 3, eps);

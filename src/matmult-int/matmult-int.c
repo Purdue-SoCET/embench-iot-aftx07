@@ -34,6 +34,7 @@
 
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -79,6 +80,8 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (i = 0; i < rpt; i++) {
         memcpy(ArrayA, ArrayA_ref, UPPERLIMIT * UPPERLIMIT * sizeof(ArrayA[0][0]));
         memcpy(ArrayB, ArrayB_ref, UPPERLIMIT * UPPERLIMIT * sizeof(ArrayA[0][0]));
@@ -101,6 +104,7 @@ void InitSeed(void) {
  * time it takes to multiply the matrices.
  */
 void Test(matrix A, matrix B, matrix Res) {
+    rvb_insight_print("trace");
     Multiply(A, B, Res);
 }
 
@@ -108,6 +112,7 @@ void Test(matrix A, matrix B, matrix Res) {
  * Generates random integers between 0 and 8095
  */
 int RandomInteger(void) {
+    rvb_insight_print("trace");
     Seed = ((Seed * 133) + 81) % MOD_SIZE;
     return (Seed);
 }
@@ -117,6 +122,7 @@ int RandomInteger(void) {
  */
 void Multiply(matrix A, matrix B, matrix Res) {
     register int Outer, Inner, Index;
+    rvb_insight_print("trace");
 
     for (Outer = 0; Outer < UPPERLIMIT; Outer++)
         for (Inner = 0; Inner < UPPERLIMIT; Inner++) {

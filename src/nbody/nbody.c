@@ -60,6 +60,7 @@
 #include <stdlib.h>
 
 #include "support.h"
+#include "rvb-insight.h"
 
 #define LOCAL_SCALE_FACTOR 1
 
@@ -99,6 +100,7 @@ static const int BODIES_SIZE = sizeof(solar_bodies) / sizeof(solar_bodies[0]);
 
 void offset_momentum(struct body *bodies, unsigned int nbodies) {
     unsigned int i, k;
+    rvb_insight_print("trace");
     for (i = 0; i < nbodies; ++i)
         for (k = 0; k < 3; ++k)
             bodies[0].v[k] -= bodies[i].v[k] * bodies[i].mass / SOLAR_MASS;
@@ -107,6 +109,7 @@ void offset_momentum(struct body *bodies, unsigned int nbodies) {
 double bodies_energy(struct body *bodies, unsigned int nbodies) {
     double dx[3], distance, e = 0.0;
     unsigned int i, j, k;
+    rvb_insight_print("trace");
 
     for (i = 0; i < nbodies; ++i) {
         e += bodies[i].mass *
@@ -143,8 +146,11 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
     double tot_e = 0.0;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (j = 0; j < rpt; j++) {
         int i;
+        rvb_insight_print("trace");
         offset_momentum(solar_bodies, BODIES_SIZE);
         /*printf("%.9f\n", bodies_energy(solar_bodies, BODIES_SIZE)); */
         tot_e = 0.0;

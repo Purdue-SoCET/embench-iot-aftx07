@@ -15,6 +15,7 @@
    placed it in the public domain).  See http://www.hackersdelight.org/ */
 
 #include "support.h"
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -88,6 +89,7 @@ uint64 modul64(uint64 x, uint64 y, uint64 z) {
        checked for. */
 
     int64 i, t;
+    rvb_insight_print("trace");
 
     for (i = 1; i <= 64; i++) {   // Do 64 times.
         t = (int64)x >> 63;       // All 1's if x(63) = 1.
@@ -106,6 +108,7 @@ uint64 modul64(uint64 x, uint64 y, uint64 z) {
 uint64 montmul(uint64 abar, uint64 bbar, uint64 m, uint64 mprime) {
 
     uint64 thi, tlo, tm, tmmhi, tmmlo, uhi, ulo, ov;
+    rvb_insight_print("trace");
 
     /* t = abar*bbar. */
 
@@ -164,6 +167,7 @@ does not find u and v st. u*a - v*b = 1, but rather u*(2a) - v*b = 1. */
 
 void xbinGCD(uint64 a, uint64 b, volatile uint64 *pu, volatile uint64 *pv) {
     uint64 alpha, beta, u, v;
+    rvb_insight_print("trace");
 
     u = 1;
     v = 0;
@@ -214,6 +218,9 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
     int errors;
+    
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
 
     for (i = 0; i < rpt; i++) {
         uint64 a, b, m, hr, p1hi, p1lo, p1, p, abar, bbar;

@@ -16,6 +16,7 @@
 
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -284,6 +285,7 @@ void WikiSort(Test array[], const long size, const Comparison compare) {
 #define CACHE_SIZE 512
     const long cache_size = CACHE_SIZE;
     Test cache[CACHE_SIZE];
+    rvb_insight_print("trace");
 
     long index, merge_size, start, mid, end, fractional, decimal;
     long power_of_two, fractional_base, fractional_step, decimal_step;
@@ -317,6 +319,7 @@ void WikiSort(Test array[], const long size, const Comparison compare) {
         end = decimal;
 
         InsertionSort(array, MakeRange(start, end), compare);
+        rvb_insight_print("trace");
     }
 
     /* then merge sort the higher levels, which can be 32-63, 64-127, 128-255, etc. */
@@ -720,6 +723,7 @@ void WikiSort(Test array[], const long size, const Comparison compare) {
             fractional_step -= fractional_base;
             decimal_step += 1;
         }
+        rvb_insight_print("trace");
     }
 
 #undef CACHE_SIZE
@@ -853,6 +857,7 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     long total, index, test_case;
     Comparison compare = TestCompare;
+    rvb_insight_set_cfg("trace", 0x1ffff);
 
     TestCasePtr test_cases[9] = {
         &TestingPathological,    &TestingRandom,    &TestingMostlyDescending,

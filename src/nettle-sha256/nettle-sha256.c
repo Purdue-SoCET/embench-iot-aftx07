@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -117,6 +118,7 @@ void _nettle_write_be32(size_t length, uint8_t *dst, const uint32_t *src) {
     size_t i;
     size_t words;
     unsigned leftover;
+    rvb_insight_print("trace");
 
     words = length / 4;
     leftover = length % 4;
@@ -191,6 +193,7 @@ void _nettle_sha256_compress(uint32_t *state, const uint8_t *input, const uint32
     uint32_t A, B, C, D, E, F, G, H; /* Local vars */
     unsigned i;
     uint32_t *d;
+    rvb_insight_print("trace");
 
     for (i = 0; i < SHA256_DATA_LENGTH; i++, input += 4) {
         data[i] = READ_UINT32(input);
@@ -298,6 +301,7 @@ void sha256_init(struct sha256_ctx *ctx) {
         0x6a09e667UL, 0xbb67ae85UL, 0x3c6ef372UL, 0xa54ff53aUL,
         0x510e527fUL, 0x9b05688cUL, 0x1f83d9abUL, 0x5be0cd19UL,
     };
+    rvb_insight_print("trace");
 
     memcpy(ctx->state, H0, sizeof(H0));
 
@@ -309,11 +313,13 @@ void sha256_init(struct sha256_ctx *ctx) {
 }
 
 void sha256_update(struct sha256_ctx *ctx, size_t length, const uint8_t *data) {
+    rvb_insight_print("trace");
     MD_UPDATE(ctx, length, data, COMPRESS, ctx->count++);
 }
 
 static void sha256_write_digest(struct sha256_ctx *ctx, size_t length, uint8_t *digest) {
     uint64_t bit_count;
+    rvb_insight_print("trace");
 
     assert_beebs(length <= SHA256_DIGEST_SIZE);
 
@@ -332,6 +338,7 @@ static void sha256_write_digest(struct sha256_ctx *ctx, size_t length, uint8_t *
 }
 
 void sha256_digest(struct sha256_ctx *ctx, size_t length, uint8_t *digest) {
+    rvb_insight_print("trace");
     sha256_write_digest(ctx, length, digest);
     sha256_init(ctx);
 }
@@ -403,8 +410,10 @@ int benchmark(void) {
 
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
+    rvb_insight_set_cfg("trace", 0x1ffff);
 
     for (i = 0; i < rpt; i++) {
+        rvb_insight_print("trace");
         memset(buffer, 0, sizeof(buffer));
         struct sha256_ctx ctx;
         nettle_sha256.init(&ctx);

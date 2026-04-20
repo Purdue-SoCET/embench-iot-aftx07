@@ -81,6 +81,7 @@
 
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -126,6 +127,8 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int k;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (k = 0; k < rpt; k++) {
         int i, j, nmax = 20, n = 5;
         long int /* eps, */ w;
@@ -142,6 +145,7 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
                 w += a[i][j];
             }
             b[i] = w;
+            rvb_insight_print("trace");
         }
 
         /*  chkerr = ludcmp(nmax, n, eps); */
@@ -154,6 +158,7 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 int ludcmp(int nmax, int n) {
     int i, j, k;
     long w, y[100];
+    rvb_insight_print("trace");
 
     /* if(n > 99 || eps <= 0.0) return(999); */
     for (i = 0; i < n; i++) {
@@ -175,6 +180,7 @@ int ludcmp(int nmax, int n) {
                 w -= a[i + 1][k] * a[k][j];
             a[i + 1][j] = w;
         }
+        rvb_insight_print("trace");
     }
     y[0] = b[0];
     for (i = 1; i <= n; i++) /* iterates n times */
@@ -183,6 +189,7 @@ int ludcmp(int nmax, int n) {
         for (j = 0; j < i; j++) /* triangular sub loop */
             w -= a[i][j] * y[j];
         y[i] = w;
+        rvb_insight_print("trace");
     }
     x[n] = y[n] / a[n][n];
     for (i = n - 1; i >= 0; i--) /* iterates n times */
@@ -191,6 +198,7 @@ int ludcmp(int nmax, int n) {
         for (j = i + 1; j <= n; j++) /* triangular sub loop */
             w -= a[i][j] * x[j];
         x[i] = w / a[i][i];
+        rvb_insight_print("trace");
     }
     return (0);
 }

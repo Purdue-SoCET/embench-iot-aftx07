@@ -17,6 +17,7 @@
 /* CRC - 32 BIT ANSI X3.66 CRC checksum files */
 
 #include "support.h"
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -144,6 +145,7 @@ DWORD
 crc32pseudo() {
     int i;
     register DWORD oldcrc32;
+    rvb_insight_print("trace");
 
     oldcrc32 = 0xFFFFFFFF;
 
@@ -171,6 +173,9 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
     DWORD r;
+
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
 
     for (i = 0; i < rpt; i++) {
         srand_beebs(0);

@@ -15,6 +15,7 @@
    SPDX-License-Identifier: GPL-3.0-or-later */
 
 #include "support.h"
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -418,6 +419,7 @@ static int foo(const char *re, int re_len, const char *s, int s_len, struct rege
             FAIL_IF(depth < 0, SLRE_UNBALANCED_BRACKETS);
             FAIL_IF(i > 0 && re[i - 1] == '(', SLRE_NO_MATCH);
         }
+        rvb_insight_print("trace");
     }
 
     FAIL_IF(depth != 0, SLRE_UNBALANCED_BRACKETS);
@@ -428,6 +430,8 @@ static int foo(const char *re, int re_len, const char *s, int s_len, struct rege
 
 int slre_match(const char *regexp, const char *s, int s_len, struct slre_cap *caps, int num_caps) {
     struct regex_info info;
+
+    rvb_insight_print("trace");
 
     /* Initialize info structure */
     info.flags = info.num_brackets = info.num_branches = 0;
@@ -465,6 +469,9 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     volatile int ret;
     int j;
+
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
 
     for (j = 0; j < rpt; j++) {
         int i;

@@ -17,6 +17,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -475,6 +476,7 @@ void _aes_set_key(unsigned nr, unsigned nk, uint32_t *subkeys, const uint8_t *ke
     const uint8_t *rp;
     unsigned lastkey, i;
     uint32_t t;
+    rvb_insight_print("trace");
 
     assert_beebs(nk != 0);
     lastkey = (AES_BLOCK_SIZE / 4) * (nr + 1);
@@ -498,6 +500,7 @@ void _aes_set_key(unsigned nr, unsigned nk, uint32_t *subkeys, const uint8_t *ke
 
 void aes_set_encrypt_key(struct aes_ctx *ctx, size_t keysize, const uint8_t *key) {
     unsigned nk, nr;
+    rvb_insight_print("trace");
 
     assert_beebs(keysize >= AES_MIN_KEY_SIZE);
     assert_beebs(keysize <= AES_MAX_KEY_SIZE);
@@ -582,6 +585,7 @@ static const uint32_t mtable[0x100] = {
 
 void _nettle_aes_invert(unsigned rounds, uint32_t *dst, const uint32_t *src) {
     unsigned i;
+    rvb_insight_print("trace");
 
     /* Reverse the order of subkeys, in groups of 4. */
     /* FIXME: Instead of reordering the subkeys, change the access order
@@ -608,11 +612,13 @@ void _nettle_aes_invert(unsigned rounds, uint32_t *dst, const uint32_t *src) {
 // From nettle/aes-set-decrypt-key.c
 
 void aes_invert_key(struct aes_ctx *dst, const struct aes_ctx *src) {
+    rvb_insight_print("trace");
     _nettle_aes_invert(src->rounds, dst->keys, src->keys);
     dst->rounds = src->rounds;
 }
 
 void aes_set_decrypt_key(struct aes_ctx *ctx, size_t keysize, const uint8_t *key) {
+    rvb_insight_print("trace");
     /* We first create subkeys for encryption,
      * then modify the subkeys for decryption. */
     aes_set_encrypt_key(ctx, keysize, key);
@@ -623,6 +629,7 @@ void aes_set_decrypt_key(struct aes_ctx *ctx, size_t keysize, const uint8_t *key
 
 void _nettle_aes_encrypt(unsigned rounds, const uint32_t *keys, const struct aes_table *T,
                          size_t length, uint8_t *dst, const uint8_t *src) {
+    rvb_insight_print("trace");
     FOR_BLOCKS(length, dst, src, AES_BLOCK_SIZE) {
         uint32_t w0, w1, w2, w3; /* working ciphertext */
         uint32_t t0, t1, t2, t3;
@@ -669,6 +676,7 @@ void _nettle_aes_encrypt(unsigned rounds, const uint32_t *keys, const struct aes
 
 void _nettle_aes_decrypt(unsigned rounds, const uint32_t *keys, const struct aes_table *T,
                          size_t length, uint8_t *dst, const uint8_t *src) {
+    rvb_insight_print("trace");
     FOR_BLOCKS(length, dst, src, AES_BLOCK_SIZE) {
         uint32_t w0, w1, w2, w3; /* working ciphertext */
         uint32_t t0, t1, t2, t3;
@@ -714,6 +722,7 @@ void _nettle_aes_decrypt(unsigned rounds, const uint32_t *keys, const struct aes
 // From nettle/aes-encrypt.c
 
 void aes_encrypt(const struct aes_ctx *ctx, size_t length, uint8_t *dst, const uint8_t *src) {
+    rvb_insight_print("trace");
     assert_beebs(!(length % AES_BLOCK_SIZE));
     _nettle_aes_encrypt(ctx->rounds, ctx->keys, &_aes_encrypt_table, length, dst, src);
 }
@@ -721,6 +730,7 @@ void aes_encrypt(const struct aes_ctx *ctx, size_t length, uint8_t *dst, const u
 // From nettle/aes-decrypt.c
 
 void aes_decrypt(const struct aes_ctx *ctx, size_t length, uint8_t *dst, const uint8_t *src) {
+    rvb_insight_print("trace");
     assert_beebs(!(length % AES_BLOCK_SIZE));
     _nettle_aes_decrypt(ctx->rounds, ctx->keys, &_aes_decrypt_table, length, dst, src);
 }
@@ -804,7 +814,10 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+
     for (i = 0; i < rpt; i++) {
+        rvb_insight_print("trace");
         aes_set_encrypt_key(&encctx, 32, key);
         aes_encrypt(&encctx, LEN, encrypted, plaintext);
 

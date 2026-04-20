@@ -14,6 +14,7 @@
 #include "sglib.h"
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -150,6 +151,8 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     volatile int cnt;
     int i;
+
+    rvb_insight_set_cfg("trace", 0x1ffff);
 
     for (i = 0; i < rpt; i++) {
         int i;

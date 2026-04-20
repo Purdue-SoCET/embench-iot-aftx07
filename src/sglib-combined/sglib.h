@@ -66,6 +66,7 @@
 
 #define SGLIB___ARRAY_HEAP_DOWN(type, a, ind, max, comparator, elem_exchanger)                     \
     {                                                                                              \
+        rvb_insight_print("trace");                                                                \
         int _m_, _l_, _r_, _i_;                                                                    \
         _i_ = (ind);                                                                               \
         _m_ = _i_;                                                                                 \
@@ -103,6 +104,7 @@
         _endStack_[0] = (max);                                                                     \
         _stacki_ = 1;                                                                              \
         while (_stacki_ > 0) {                                                                     \
+            rvb_insight_print("trace");                                                            \
             _stacki_--;                                                                            \
             _start_ = _startStack_[_stacki_];                                                      \
             _end_ = _endStack_[_stacki_];                                                          \
@@ -171,6 +173,7 @@
                                   result_index)                                                    \
     {                                                                                              \
         int _kk_, _cc_, _ii_, _jj_, _ff_;                                                          \
+        rvb_insight_print("trace");                                                                \
         _ii_ = (start_index);                                                                      \
         _jj_ = (end_index);                                                                        \
         _ff_ = 0;                                                                                  \
@@ -305,6 +308,7 @@
 #define SGLIB_HASH_TAB_ADD_IF_NOT_MEMBER(type, table, dim, elem, hash_function, comparator,        \
                                          member)                                                   \
     {                                                                                              \
+            rvb_insight_print("trace");                                                            \
         unsigned _pos_;                                                                            \
         type *_elem_;                                                                              \
         SGLIB_HASH_TAB_FIND_MEMBER(type, table, dim, elem, _pos_, _elem_);                         \
@@ -481,6 +485,7 @@
         _r_ = (list);                                                                              \
         _contFlag_ = 1;                                                                            \
         for (_n_ = 1; _contFlag_; _n_ = _n_ + _n_) {                                               \
+            rvb_insight_print("trace");                                                            \
             _todo_ = _r_;                                                                          \
             _r_ = NULL;                                                                            \
             _restail_ = &_r_;                                                                      \
@@ -1785,6 +1790,7 @@ http://www.cis.ohio-state.edu/~gurari/course/cis680/cis680Ch11.html
     }                                                                                              \
                                                                                                    \
     static void sglib___##type##_add_recursive(type **tree, type *elem) {                          \
+            rvb_insight_print("trace");                                                            \
         int cmp;                                                                                   \
         type *t;                                                                                   \
         t = *tree;                                                                                 \

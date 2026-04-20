@@ -30,6 +30,7 @@
 
 #include "support.h"
 #include <math.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -72,6 +73,9 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
+
     for (i = 0; i < rpt; i++) {
         double MeanA, MeanB, VarA, VarB, StddevA, StddevB /*, Coef */;
 
@@ -80,15 +84,18 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
         Initialize(ArrayA);
         Calc_Sum_Mean(ArrayA, &SumA, &MeanA);
         Calc_Var_Stddev(ArrayA, MeanA, &VarA, &StddevA);
+        rvb_insight_print("trace");
 
         Initialize(ArrayB);
         Calc_Sum_Mean(ArrayB, &SumB, &MeanB);
         Calc_Var_Stddev(ArrayB, MeanB, &VarB, &StddevB);
+        rvb_insight_print("trace");
 
         /* Coef will have to be used globally in Calc_LinCorrCoef since it would
            be beyond the 6 registers used for passing parameters
          */
         Calc_LinCorrCoef(ArrayA, ArrayB, MeanA, MeanB /*, &Coef */);
+        rvb_insight_print("trace");
     }
 
     return 0;

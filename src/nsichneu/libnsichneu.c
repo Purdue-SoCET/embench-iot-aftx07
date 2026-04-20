@@ -35,6 +35,7 @@
 // #define DO_TRACING
 
 #include "support.h"
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -81,10 +82,13 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
     for (j = 0; j < rpt; j++) {
         P1_is_marked = 3;
         P2_is_marked = 5;
         P3_is_marked = 0;
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P1 : 0, 1, 2 */
         /* Transition T1 */
@@ -116,6 +120,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P1 : 0, 2, 1 */
         /* Transition T1 */
         if ((P1_is_marked >= 3) && (P3_is_marked + 3 <= 6) &&
@@ -145,6 +151,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P1 : 1, 0, 2 */
         /* Transition T1 */
@@ -176,6 +184,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P1 : 1, 2, 0 */
         /* Transition T1 */
         if ((P1_is_marked >= 3) && (P3_is_marked + 3 <= 6) &&
@@ -206,6 +216,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P1 : 2, 0, 1 */
         /* Transition T1 */
         if ((P1_is_marked >= 3) && (P3_is_marked + 3 <= 6) &&
@@ -235,6 +247,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P1 : 2, 1, 0 */
         /* Transition T1 */
         if ((P1_is_marked >= 3) && (P3_is_marked + 3 <= 6) &&
@@ -263,6 +277,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 1, 2, 3 */
         /* Transition T2 */
@@ -294,6 +310,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 1, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && (((P3_is_marked + 3) <= 6)) &&
@@ -323,6 +341,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 2, 1, 3 */
         /* Transition T2 */
@@ -354,6 +374,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 2, 3, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -383,6 +405,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 3, 1, 2 */
         /* Transition T2 */
@@ -414,6 +438,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 3, 2, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -443,6 +469,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 0, 2, 3 */
         /* Transition T2 */
@@ -474,6 +502,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 0, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -503,6 +533,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 2, 0, 3 */
         /* Transition T2 */
@@ -534,6 +566,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 2, 3, 0 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -563,6 +597,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 3, 0, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -591,6 +627,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 3, 2, 0 */
         /* Transition T2 */
@@ -622,6 +660,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 0, 1, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -650,6 +690,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 0, 3, 1 */
         /* Transition T2 */
@@ -680,6 +722,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 1, 0, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -708,6 +752,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 1, 3, 0 */
         /* Transition T2 */
@@ -738,6 +784,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 3, 0, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -766,6 +814,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 3, 1, 0 */
         /* Transition T2 */
@@ -796,6 +846,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 0, 1, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -825,6 +877,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 0, 2, 1 */
         /* Transition T2 */
@@ -857,6 +911,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 1, 0, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -887,6 +943,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 1, 2, 0 */
         /* Transition T2 */
@@ -919,6 +977,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 2, 0, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -950,6 +1010,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 2, 1, 0 */
         /* Transition T2 */
         if ((P2_is_marked >= 4) && ((P3_is_marked + 3) <= 6) &&
@@ -980,6 +1042,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 1, 2, 4 */
         /* Transition T2 */
@@ -1013,6 +1077,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 1, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1044,6 +1110,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 1, 4, 2 */
         /* Transition T2 */
@@ -1077,6 +1145,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 1, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1108,6 +1178,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 2, 1, 4 */
         /* Transition T2 */
@@ -1141,6 +1213,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 2, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1172,6 +1246,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 2, 4, 1 */
         /* Transition T2 */
@@ -1205,6 +1281,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 2, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1236,6 +1314,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 3, 1, 4 */
         /* Transition T2 */
@@ -1269,6 +1349,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 3, 2, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1300,6 +1382,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 3, 4, 1 */
         /* Transition T2 */
@@ -1333,6 +1417,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 3, 4, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1364,6 +1450,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 4, 1, 2 */
         /* Transition T2 */
@@ -1397,6 +1485,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 4, 1, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1428,6 +1518,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 4, 2, 1 */
         /* Transition T2 */
@@ -1461,6 +1553,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 4, 2, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1492,6 +1586,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 0, 4, 3, 1 */
         /* Transition T2 */
@@ -1525,6 +1621,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 0, 4, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1556,6 +1654,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 0, 2, 4 */
         /* Transition T2 */
@@ -1589,6 +1689,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 0, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1620,6 +1722,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 0, 4, 2 */
         /* Transition T2 */
@@ -1653,6 +1757,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 0, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1684,6 +1790,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 2, 0, 4 */
         /* Transition T2 */
@@ -1717,6 +1825,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 2, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1747,6 +1857,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 2, 4, 0 */
         /* Transition T2 */
@@ -1780,6 +1892,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 2, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1810,6 +1924,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 3, 0, 4 */
         /* Transition T2 */
@@ -1843,6 +1959,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 3, 2, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1873,6 +1991,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 3, 4, 0 */
         /* Transition T2 */
@@ -1906,6 +2026,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 3, 4, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -1936,6 +2058,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 4, 0, 2 */
         /* Transition T2 */
@@ -1969,6 +2093,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 4, 0, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2000,6 +2126,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 4, 2, 0 */
         /* Transition T2 */
@@ -2033,6 +2161,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 4, 2, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2063,6 +2193,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 1, 4, 3, 0 */
         /* Transition T2 */
@@ -2096,6 +2228,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 1, 4, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2126,6 +2260,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 0, 1, 4 */
         /* Transition T2 */
@@ -2159,6 +2295,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 0, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2190,6 +2328,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 0, 4, 1 */
         /* Transition T2 */
@@ -2223,6 +2363,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 0, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2254,6 +2396,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 1, 0, 4 */
         /* Transition T2 */
@@ -2287,6 +2431,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 1, 3, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2317,6 +2463,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 1, 4, 0 */
         /* Transition T2 */
@@ -2350,6 +2498,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 1, 4, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2380,6 +2530,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 3, 0, 4 */
         /* Transition T2 */
@@ -2413,6 +2565,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 3, 1, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2443,6 +2597,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 3, 4, 0 */
         /* Transition T2 */
@@ -2476,6 +2632,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 3, 4, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2506,6 +2664,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 4, 0, 1 */
         /* Transition T2 */
@@ -2539,6 +2699,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 4, 0, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2570,6 +2732,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 4, 1, 0 */
         /* Transition T2 */
@@ -2603,6 +2767,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 4, 1, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2633,6 +2799,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 2, 4, 3, 0 */
         /* Transition T2 */
@@ -2666,6 +2834,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 2, 4, 3, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2696,6 +2866,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 0, 1, 4 */
         /* Transition T2 */
@@ -2729,6 +2901,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 0, 2, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2760,6 +2934,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 0, 4, 1 */
         /* Transition T2 */
@@ -2793,6 +2969,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 0, 4, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2824,6 +3002,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 1, 0, 4 */
         /* Transition T2 */
@@ -2857,6 +3037,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 1, 2, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2887,6 +3069,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 1, 4, 0 */
         /* Transition T2 */
@@ -2920,6 +3104,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 1, 4, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -2950,6 +3136,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 2, 0, 4 */
         /* Transition T2 */
@@ -2983,6 +3171,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 2, 1, 4 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3013,6 +3203,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 2, 4, 0 */
         /* Transition T2 */
@@ -3046,6 +3238,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 2, 4, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3076,6 +3270,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 4, 0, 1 */
         /* Transition T2 */
@@ -3109,6 +3305,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 4, 0, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3140,6 +3338,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 4, 1, 0 */
         /* Transition T2 */
@@ -3173,6 +3373,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 4, 1, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3203,6 +3405,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 3, 4, 2, 0 */
         /* Transition T2 */
@@ -3236,6 +3440,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 3, 4, 2, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3266,6 +3472,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 0, 1, 2 */
         /* Transition T2 */
@@ -3299,6 +3507,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 0, 1, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3330,6 +3540,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 0, 2, 1 */
         /* Transition T2 */
@@ -3363,6 +3575,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 0, 2, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3394,6 +3608,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 0, 3, 1 */
         /* Transition T2 */
@@ -3427,6 +3643,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 0, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3458,6 +3676,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 1, 0, 2 */
         /* Transition T2 */
@@ -3491,6 +3711,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 1, 0, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3522,6 +3744,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 1, 2, 0 */
         /* Transition T2 */
@@ -3555,6 +3779,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 1, 2, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3585,6 +3811,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 1, 3, 0 */
         /* Transition T2 */
@@ -3618,6 +3846,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 1, 3, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3648,6 +3878,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 2, 0, 1 */
         /* Transition T2 */
@@ -3681,6 +3913,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 2, 0, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3712,6 +3946,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 2, 1, 0 */
         /* Transition T2 */
@@ -3745,6 +3981,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 2, 1, 3 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3775,6 +4013,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 2, 3, 0 */
         /* Transition T2 */
@@ -3808,6 +4048,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 2, 3, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3838,6 +4080,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 3, 0, 1 */
         /* Transition T2 */
@@ -3871,6 +4115,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 3, 0, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3902,6 +4148,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 3, 1, 0 */
         /* Transition T2 */
@@ -3935,6 +4183,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 3, 1, 2 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -3965,6 +4215,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
 
         /* Permutation for Place P2 : 4, 3, 2, 0 */
         /* Transition T2 */
@@ -3998,6 +4250,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
             } /* end of if (Transition condition) */
         }
 
+        rvb_insight_print("trace");
+
         /* Permutation for Place P2 : 4, 3, 2, 1 */
         /* Transition T2 */
         if ((P2_is_marked >= 5) && ((P3_is_marked + 3) <= 6) &&
@@ -4028,6 +4282,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
 
             } /* end of if (Transition condition) */
         }
+
+        rvb_insight_print("trace");
     }
 
     return 0;

@@ -13,6 +13,7 @@
 
 #include "picojpeg.h"
 #include "support.h"
+#include "rvb-insight.h"
 
 #include <string.h>
 
@@ -108,14 +109,18 @@ int benchmark(void) {
 
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int i;
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
 
     for (i = 0; i < rpt; i++) {
         unsigned char status;
 
         jpeg_off = 0;
 
+        rvb_insight_print("trace");
         status = pjpeg_decode_init(&pInfo, pjpeg_need_bytes_callback, 0, 0);
 
+        rvb_insight_print("trace");
         for (;;) {
             status = pjpeg_decode_mcu();
 

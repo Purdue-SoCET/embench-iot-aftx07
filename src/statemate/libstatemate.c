@@ -43,6 +43,7 @@
 
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -189,6 +190,7 @@ char BEWEGUNG_BLOCK_ERKENNUNG_CTRL_next_state;             /** 2 bits **/
 char BLOCK_ERKENNUNG_CTRL_BLOCK_ERKENNUNG_CTRL_next_state; /** 2 bits **/
 
 void interface(void) {
+    rvb_insight_print("trace");
     if (SYS_bit_get(Bitlist, entered_WIEDERHOLSPERRE_FH_TUERMODUL_CTRL_IDX))
         tm_entered_WIEDERHOLSPERRE_FH_TUERMODUL_CTRL = time;
     if (SYS_bit_get(Bitlist, entered_WIEDERHOLSPERRE_FH_TUERMODUL_CTRL_IDX) ||
@@ -954,6 +956,7 @@ void FH_DU(void) {
     stable = 0;
     step = 0;
     while (!stable) {
+        rvb_insight_print("trace");
         stable = 1;
         step++;
         {

@@ -34,6 +34,7 @@
 
 #include "support.h"
 #include <string.h>
+#include "rvb-insight.h"
 
 /* This scale factor will be changed to equalise the runtime of the
    benchmarks. */
@@ -54,9 +55,11 @@ void jpegdct(short *d, short *r);
 
 void vec_mpy1(short y[], const short x[], short scaler) {
     long int i;
+    rvb_insight_print("trace");
 
-    for (i = 0; i < 150; i++)
+    for (i = 0; i < 150; i++) {
         y[i] += ((scaler * x[i]) >> 15);
+    }
 }
 
 /*****************************************************
@@ -65,6 +68,7 @@ void vec_mpy1(short y[], const short x[], short scaler) {
 long int mac(const short *a, const short *b, long int sqr, long int *sum) {
     long int i;
     long int dotp = *sum;
+    rvb_insight_print("trace");
 
     for (i = 0; i < 150; i++) {
         dotp += b[i] * a[i];
@@ -80,6 +84,7 @@ long int mac(const short *a, const short *b, long int sqr, long int *sum) {
  *****************************************************/
 void fir(const short array1[], const short coeff[], long int output[]) {
     long int i, j, sum;
+    rvb_insight_print("trace");
 
     for (i = 0; i < N - ORDER; i++) {
         sum = 0;
@@ -101,6 +106,7 @@ void fir_no_red_ld(const short x[], const short h[], long int y[]) {
     long int i, j;
     long int sum0, sum1;
     short x0, x1, h0, h1;
+    rvb_insight_print("trace");
     for (j = 0; j < 100; j += 2) {
         sum0 = 0;
         sum1 = 0;
@@ -126,6 +132,7 @@ void fir_no_red_ld(const short x[], const short h[], long int y[]) {
  *out the compiler's flexibility   ********************************************************/
 long int latsynth(short b[], const short k[], long int n, long int f) {
     long int i;
+    rvb_insight_print("trace");
 
     f -= b[n - 1] * k[n - 1];
     for (i = n - 2; i >= 0; i--) {
@@ -143,6 +150,7 @@ void iir1(const short *coefs, const short *input, long int *optr, long int *stat
     long int x;
     long int t;
     long int n;
+    rvb_insight_print("trace");
 
     x = input[0];
     for (n = 0; n < 50; n++) {
@@ -167,6 +175,7 @@ long int codebook(long int mask, long int bitchanged, long int numbasis, long in
  */
 {
     long int j;
+    rvb_insight_print("trace");
 
     /*
      * Remove along with the code below.
@@ -198,6 +207,7 @@ long int codebook(long int mask, long int bitchanged, long int numbasis, long in
 void jpegdct(short *d, short *r) {
     long int t[12];
     short i, j, k, m, n, p;
+    rvb_insight_print("trace");
     for (k = 1, m = 0, n = 13, p = 8; k <= 8; k += 7, m += 3, n += 3, p -= 7, d -= 64) {
         for (i = 0; i < 8; i++, d += p) {
             for (j = 0; j < 4; j++) {
@@ -252,6 +262,9 @@ int benchmark(void) {
 static int __attribute__((noinline)) benchmark_body(int rpt) {
     int j;
 
+    rvb_insight_set_cfg("trace", 0x1ffff);
+    rvb_insight_print("trace");
+
     for (j = 0; j < rpt; j++) {
         short unsigned int in_a[200] = {
             0x0000, 0x07ff, 0x0c00, 0x0800, 0x0200, 0xf800, 0xf300, 0x0400, 0x0000, 0x07ff, 0x0c00,
@@ -296,6 +309,7 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
         c = 0x3;
         d = 0xAAAA;
         e = 0xEEEE;
+        rvb_insight_print("trace");
 
         for (int i = 0; i < 200; i++) {
             a[i] = in_a[i];

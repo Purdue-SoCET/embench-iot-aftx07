@@ -133,6 +133,7 @@ void compdecomp(byte *data, size_t data_len) {
     byte c;
     byte *cptr;
     byte *dptr = data;
+    rvb_insight_print("huff_trace");
 
     /*
        COMPRESSION
@@ -158,8 +159,8 @@ void compdecomp(byte *data, size_t data_len) {
     for (i = 0; i < data_len; ++i) {
         ++freq[(size_t)(*dptr)];
         ++dptr;
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // create indirect heap based on frequencies
     n = 0;
@@ -169,13 +170,13 @@ void compdecomp(byte *data, size_t data_len) {
             heap[n] = i;
             ++n;
         }
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     for (i = n; i > 0; --i) {
         heap_adjust(freq, heap, n, i);
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // generate a trie from heap
     size_t temp;
@@ -200,8 +201,8 @@ void compdecomp(byte *data, size_t data_len) {
 
         // adjust the heap again
         heap_adjust(freq, heap, n, 1);
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     link[256 + n] = 0;
 
@@ -244,8 +245,8 @@ void compdecomp(byte *data, size_t data_len) {
             if (i > maxi)
                 maxi = i;
         }
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // make sure longest codes fit in unsigned long-bits
     if (maxi > (sizeof(unsigned long) * 8)) {
@@ -294,8 +295,8 @@ void compdecomp(byte *data, size_t data_len) {
         }
 
         ++dptr;
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // output any incomplete data_len and bits
     bout <<= (7 - bit);
@@ -308,6 +309,7 @@ void compdecomp(byte *data, size_t data_len) {
     /*
        DECOMPRESSION
      */
+    rvb_insight_print("huff_trace");
 
     // allocate heap2
     bits32 heap2[256];
@@ -344,8 +346,8 @@ void compdecomp(byte *data, size_t data_len) {
 
             heap2[j] = k; // store link in heap2
         }
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // sort outc based on heap2
     for (i = 1; i < 256; ++i) {
@@ -361,8 +363,8 @@ void compdecomp(byte *data, size_t data_len) {
 
         heap2[j] = t;
         outc[j] = c;
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // find first character in table
     for (j = 0; heap2[j] == 0; ++j)
@@ -375,6 +377,7 @@ void compdecomp(byte *data, size_t data_len) {
     n = 0;
     cptr = comp;
     dptr = data;
+    rvb_insight_print("huff_trace");
 
     while (n < data_len) {
         k = k * 2 + 1; // right link
@@ -403,12 +406,11 @@ void compdecomp(byte *data, size_t data_len) {
             mask = 0x80;
             ++cptr;
         }
-        rvb_insight_print("huff_trace");
     }
+    rvb_insight_print("huff_trace");
 
     // remove work areas
     free_beebs(comp);
-    rvb_insight_print("huff_trace");
 }
 
 int verify_benchmark(int res __attribute((unused))) {
@@ -446,6 +448,8 @@ static int __attribute__((noinline)) benchmark_body(int rpt) {
         // what we're timing
         compdecomp(test_data, TEST_SIZE);
     }
+
+    rvb_insight_print("huff_trace");
 
     // done
     return 0;
